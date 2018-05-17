@@ -1,0 +1,132 @@
+TRABAJO PRÁCTICO 2018 AVANZADA I LABORATORIO V
+
+Para una aerolínea muy conocida , se nos requiere realizar una API REST para el mantenimiento de rutas de vuelos y los precios correspondientes.
+
+La API se debe hacer en dos capas :
+
+Una API REST que consiste en un microservicio que nos permite  las siguientes operaciones :
+Agregar, modificar, eliminar, listar aeropuertos, especificando a qué ciudad y qué país pertenecen, como así también su IATA Code (Ej : Mar del Plata = MDQ).
+Agregar, modificar y eliminar, listar datos de rutas (Aeropuerto de salida - Aeropuerto de llegada).
+Agregar, modificar y eliminar, listar  cabinas disponibles en el sistema (Económica, Plus, Business, Primera, etc).
+Agregar, modificar y eliminar, listar precios asociados a cabina y ruta (Ejemplo : La ruta EZE - MDQ tiene un precio de $30 dólares para la cabina económica y $50 para cabina Plus como así también una fecha desde y una fecha hasta de vigencia de cada uno de estos.
+Operaciones que se requieran para el punto 2.
+
+Esta API REST debe ser la capa que se conecte a la base de datos y los datos deben ser devueltos en modo Objeto de Dominio, para que puedan ser reutilizados por otras APIs para ser formateados para su muestra en la capa de presentación.
+
+Ejemplos :
+
+“airports” : [ {
+			"iataCode :“MDQ”,
+      “name” : “Aeropuerto Internacional Astor Piazzola”,
+      “city” : {
+	       “name”:”Mar del Plata”,
+         “iataCode” : “MDQ”
+	    },
+      “country” : {
+          “name”: “Argentina”,
+          “isoCode” :” AR”
+       }
+					“latitude” : -23.5,
+					“longitude”: 14.3
+ }]
+
+
+
+
+
+
+“prices” : [{
+	    “origin”  :  {
+			                     “itaCode”: “MDQ”,
+			                     “name” : “Aeropuerto Internacional Astor Piazzola”,
+			                     “city” : {
+	    			                          “name”:”Mar del Plata”,
+                    			            “iataCode” : “MDQ”
+	                          },
+                            “country” : {
+                                          “name”: “Argentina”,
+                                          “isoCode” :” AR”
+                            },
+					                  “latitude” : -23.5,
+					                  “longitude”: 14.3
+                            },
+        "destination"  :    {
+                             “iataCode”:”EZE”,
+                             “name” : “Aeropuerto Internacional Ministro Pistarini”,
+                             “city” : {
+                                        “name”:”Buenos Aires”,
+                                        “iataCode” : ”BUE”,
+                              },
+                              “country” : {
+                                            “name”: “Argentina”,
+                                            “isoCode” :”AR”
+                              },
+                              “latitude” : -23.5,
+                              “longitude”: 14.3
+                              },
+        "cabin" : {
+                "id" : "1",
+                "name" : "Economic"
+        },
+        price : 24.5,
+        vigencyFrom : "01-05-2018",
+        vigencyTo :"05-08-2018"
+    }]
+
+
+
+
+
+
+Una API (no debe ser REST, solo consulta) debe alimentar a un FrontEnd Web que consisten en lo siguiente :
+Listar los aeropuertos desde los cuales los aviones de nuestra Aerolínea Muy Conocida parten
+Una vez elegido un aeropuerto de salida, se deben listar los aeropuertos donde hay ruta disponible desde el aeropuerto de salida.
+Una vez elegidos los dos aeropuertos, las fechas de viaje,  listar las cabinas disponibles y los precios correspondientes a estos.
+
+
+	Esta API debe devolver la información consultada, conectándose a la API REST desarrollada en el ejercicio 	1 formateando la información para ser mostrada en cajas de diálogo en el formato {ciudad} - {iataCode} - {nombre aeropuerto} .
+
+Ejemplo :
+
+
+"airports" : [
+  {
+    "name" : "Mar del Plata (MDQ) - Astor Piazzola - Argentina"
+    "iataCode" :"MDQ"
+  },
+  {
+    "name" : "Buenos Aires (EZE) - Ministro Pistarini - Argentina"
+    "iataCode" :"EZE"
+  },
+  {
+    "name" : "Buenos Aires (AEP) -Jorge Newery - Argentina"
+    "iataCode" :"AEP"
+  },
+]
+
+
+
+"prices" : [
+  {
+    "cabin" :  “Economic”,
+    “cabinId” : 1 ,
+    “price” : 23.5
+  }
+]
+
+Consignas :
+
+Se debe configurar una persistencia en base de datos. El motor de base de datos y la tecnología de acceso es de libre elección.
+No repetir los objetos de dominio entre las distintas APIs, ver la forma de compartirlos.
+La entrega debe hacerse con los Unit Tests completos. Se debe cumplir con el 80% de line y branch test coverage.  La compilación debe ser abortada en caso de no llegar al porcentaje deseado.
+Para el seguimiento del trabajo práctico, se debe crear un repositorio de GitHub e ir subiendo el progreso semana a semana.
+Se debe configurar un servidor de Integración Continua que nos permita realizar la compilación cuando se actualice algún archivo en el repositorio GitHub. Se recomienda Travis.
+Se debe cumplir con el estilo de código propuesto por la catedra en el archivo checkstyle.xml
+
+
+Opcional :
+
+Agregar Swagger con su respectiva documentación.
+Preparar una Demo, (podemos hacer que la expongan aleatorio en cualquier de las 2 materias)
+Implementar un Readme.txt como corresponde, como levantar los servicios, los test etc etc.
+Implementar algún log4j dentro de la librería para implementar en ambos servicios
