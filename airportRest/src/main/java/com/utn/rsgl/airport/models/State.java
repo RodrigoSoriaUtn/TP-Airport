@@ -1,10 +1,14 @@
 package com.utn.rsgl.airport.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "states")
+@Getter @Setter
 public class State {
     @Id @GeneratedValue
     @Column(name = "PK_idState")
@@ -14,12 +18,9 @@ public class State {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "PK_idCountry")
-    @Column(name = "FK_idCountry")
+    @JoinColumn(name = "FK_idCountry", referencedColumnName = "PK_idCountry", nullable = false)
     private Country country;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_idState")
-    @OrderColumn(name = "name")
+    @OneToMany(mappedBy = "state")
     private List<City> cities;
 }

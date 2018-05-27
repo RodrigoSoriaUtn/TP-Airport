@@ -1,11 +1,15 @@
 package com.utn.rsgl.airport.models;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "airports")
+@Getter @Setter
 public class Airport {
     @Id @GeneratedValue
     @Column(name = "PK_idAirport")
@@ -18,16 +22,13 @@ public class Airport {
     private String IATAcode;
 
     @ManyToOne
-    @JoinColumn(name = "PK_idCity")
-    @Column(name = "FK_idCity", nullable = false)
+    @JoinColumn(name = "FK_idCity", referencedColumnName = "PK_idCity", nullable = false)
     private City city;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "departureAirport")
+    @OneToMany(mappedBy = "departureAirport")
     private List<Route> departureRoutes;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "arrivalAirport")
+    @OneToMany(mappedBy = "arrivalAirport")
     private List<Route> arrivalRoutes;
 
 }
