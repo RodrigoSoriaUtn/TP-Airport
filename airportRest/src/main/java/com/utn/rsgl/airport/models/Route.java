@@ -1,14 +1,12 @@
 package com.utn.rsgl.airport.models;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "routes")
-@Getter @Setter
+@Data
 public class Route {
     @Id @GeneratedValue
     @Column(name = "PK_idRoute")

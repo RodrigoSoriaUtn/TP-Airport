@@ -1,15 +1,13 @@
 package com.utn.rsgl.airport.models;
 
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "airports")
-@Getter @Setter
+@Data
 public class Airport {
     @Id @GeneratedValue
     @Column(name = "PK_idAirport")

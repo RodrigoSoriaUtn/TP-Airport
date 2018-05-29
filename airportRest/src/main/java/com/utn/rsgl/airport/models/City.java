@@ -2,8 +2,7 @@ package com.utn.rsgl.airport.models;
 
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "cities")
-@Getter @Setter
+@Data
 public class City {
     @Id @GeneratedValue
     @Column(name = "PK_idCity")
