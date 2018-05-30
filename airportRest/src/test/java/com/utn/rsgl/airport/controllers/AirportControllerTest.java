@@ -6,15 +6,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AirportControllerTest {
-    @Mock
+ /*   @Mock
     AirportRepository airportRepository;
     AirportController airportController;
 
@@ -40,5 +38,5 @@ public class AirportControllerTest {
         verify(airportRepository).save(airport);
         when(airportRepository.findAll()).thenReturn(airports);
     }
-
+*/
 }

@@ -12,12 +12,10 @@ public class Country {
     @Column(name = "PK_idCountry")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "ISO_code3")
-    private String ISOcode3;
+    @Column(name = "ISO_code3", nullable = false, unique = true)
+    private String ISOCode3;
 
-    @OneToMany(mappedBy = "country")
-    private List<State> states;
 }

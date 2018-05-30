@@ -1,6 +1,9 @@
 package com.utn.rsgl.core.shared.dto;
 
-public class Country {
+import lombok.Data;
+
+@Data
+public class CountryDTO {
     private String name;
     private String ISOCode3;
 }

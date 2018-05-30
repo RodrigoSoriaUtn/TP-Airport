@@ -19,10 +19,11 @@ public class City {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "IATA_code", nullable = false, unique = true)
+    private String IATACode;
+
     @ManyToOne
     @JoinColumn(name = "FK_idState",referencedColumnName = "PK_idState", nullable = false)
     private State state;
 
-    @OneToMany(mappedBy = "city")
-    private List<Airport> airports;
 }

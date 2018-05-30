@@ -17,7 +17,7 @@ public class Airport {
     private String name;
 
     @Column(name = "IATA_code", unique = true, nullable = false)
-    private String IATAcode;
+    private String IATACode;
 
     @ManyToOne
     @JoinColumn(name = "FK_idCity", referencedColumnName = "PK_idCity", nullable = false)

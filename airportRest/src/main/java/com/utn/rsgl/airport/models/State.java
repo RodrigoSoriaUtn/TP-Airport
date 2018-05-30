@@ -19,6 +19,4 @@ public class State {
     @JoinColumn(name = "FK_idCountry", referencedColumnName = "PK_idCountry", nullable = false)
     private Country country;
 
-    @OneToMany(mappedBy = "state")
-    private List<City> cities;
 }
