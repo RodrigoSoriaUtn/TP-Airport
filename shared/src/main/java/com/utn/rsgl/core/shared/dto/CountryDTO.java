@@ -1,9 +1,12 @@
 package com.utn.rsgl.core.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
 public class CountryDTO {
+    @JsonProperty("name")
     private String name;
-    private String ISOCode3;
+    @JsonProperty("iso")
+    private String isoCode3;
 }

@@ -1,10 +1,14 @@
 package com.utn.rsgl.core.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
 public class CityDTO {
+    @JsonProperty("name")
     private String name;
-    private String AITACode;
-    private StateDTO state;
+    @JsonProperty("iata")
+    private String iataCode;
+    @JsonProperty("state")
+    private CityDTO state;
 }

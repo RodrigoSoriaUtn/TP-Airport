@@ -1,12 +1,14 @@
 package com.utn.rsgl.core.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
 public class AirportDTO {
+	@JsonProperty("name")
     private String name;
-    private String IATACode;
+	@JsonProperty("iata")
+    private String iataCode;
+	@JsonProperty("city")
     private CityDTO city;
-    private double latitude;
-    private double longitude;
 }
