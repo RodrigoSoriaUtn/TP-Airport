@@ -20,7 +20,7 @@ public class City {
     private String name;
 
     @Column(name = "IATA_code", nullable = false, unique = true)
-    private String IATACode;
+    private String iataCode;
 
     @ManyToOne
     @JoinColumn(name = "FK_idState",referencedColumnName = "PK_idState", nullable = false)

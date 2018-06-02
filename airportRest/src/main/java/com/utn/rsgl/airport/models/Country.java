@@ -16,6 +16,6 @@ public class Country {
     private String name;
 
     @Column(name = "ISO_code3", nullable = false, unique = true)
-    private String ISOCode3;
+    private String isoCode3;
 
 }

@@ -10,5 +10,5 @@ public class CityDTO {
     @JsonProperty("iata")
     private String iataCode;
     @JsonProperty("state")
-    private CityDTO state;
+    private StateDTO state;
 }

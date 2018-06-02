@@ -1,8 +1,6 @@
 package com.utn.rsgl.airport;
 
 
-import com.utn.rsgl.airport.models.Country;
-import com.utn.rsgl.airport.repositories.AirportRepository;
 import com.utn.rsgl.airport.repositories.CountryRepository;
 import com.utn.rsgl.core.shared.models.test;
 import org.springframework.beans.factory.annotation.Autowired;
