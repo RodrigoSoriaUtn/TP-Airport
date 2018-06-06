@@ -2,6 +2,8 @@ package com.utn.rsgl.airport.controllers;
 
 import com.utn.rsgl.airport.config.AccessVerifier;
 import com.utn.rsgl.airport.exceptions.DataAlreadyExistsException;
+import com.utn.rsgl.airport.factories.DtoFactory;
+import com.utn.rsgl.airport.models.Country;
 import com.utn.rsgl.airport.requests.CountryRequest;
 import com.utn.rsgl.airport.service.CountryService;
 import com.utn.rsgl.core.shared.dto.CountryDTO;
@@ -12,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -64,7 +67,13 @@ public class CountryController{
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity listCountries(){
-        List<CountryDTO> countries = countryService.findAll();
+        List<Country> countries = countryService.findAll();
+        List<CountryDTO> countriesDto = new ArrayList<>();
+        DtoFactory dtoFactory = DtoFactory.getInstance();
+        for(Country country : countries){
+            countriesDto.add(dtoFactory.getDTOByModel(country,CountryDTO.class));
+        }
+
         return new ResponseEntity(countries, HttpStatus.OK);
     }
 
@@ -93,14 +102,16 @@ public class CountryController{
 
     @RequestMapping(value = "/getByISO3/{isoCode}", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<CountryDTO> getCountryByIsoCode(@PathVariable("isoCode") String isoCode){
-        CountryDTO country = countryService.findByIsoCode(isoCode);
-        return  new ResponseEntity(country, HttpStatus.OK);
+        Country country = countryService.findByIsoCode(isoCode);
+        DtoFactory dtoFactory = DtoFactory.getInstance();
+        CountryDTO countryDto = dtoFactory.getDTOByModel(country, CountryDTO.class);
+        return  new ResponseEntity(countryDto, HttpStatus.OK);
     }
-
+/*
     @RequestMapping(value = "/getByIATA/{iataCode}", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<CountryDTO> getCountryByAirportIATACode(@PathVariable("iataCode") String iataCode){
         CountryDTO country = countryService.findByAirportIATACode(iataCode);
         return new ResponseEntity(country, HttpStatus.OK);
     }
-
+*/
 }

@@ -11,6 +11,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.validation.constraints.AssertTrue;
+
 public class DtoFactoryTest {
 
     private static Country country;
@@ -58,22 +60,28 @@ public class DtoFactoryTest {
 
     @Test
     public void nullSourceTest(){
+        boolean catched = false;
         try {
             Object obj = dtoFactory.getDTOByModel(null, Object.class);
         }catch(IllegalArgumentException e){
+            catched = true;
             Assert.assertNotNull(e);
             Assert.assertTrue(e instanceof Exception);
         }
+        Assert.assertTrue(catched);
     }
 
     @Test
     public void nullDestinationTest(){
+        boolean catched = false;
         try{
             Object obj = dtoFactory.getDTOByModel(new Object(), null);
         }catch (IllegalArgumentException e){
+            catched = true;
             Assert.assertNotNull(e);
             Assert.assertTrue(e instanceof Exception);
         }
+        Assert.assertTrue(catched);
     }
 
     @Test

@@ -26,4 +26,10 @@ public class City {
     @JoinColumn(name = "FK_idState",referencedColumnName = "PK_idState", nullable = false)
     private State state;
 
+    public City(){}
+
+    public City(String name, String iataCode) {
+        this.name = name;
+        this.iataCode = iataCode;
+    }
 }

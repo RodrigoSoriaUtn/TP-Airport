@@ -21,42 +21,32 @@ public class CountryService {
     @Autowired
     private CountryRepository countryRepository;
 
-    @Autowired
-    private AirportRepository airportRepository;
+    //@Autowired
+   // private AirportRepository airportRepository;
 
     public void save(String name, String isoCode3) throws DataAlreadyExistsException {
         if(countryRepository.findCountryByIsoCode3(isoCode3) != null){
             throw new DataAlreadyExistsException("The city with the ISO code : "
                                                 +isoCode3+" already exists!");
         }
-        Country country = new Country();
-        country.setName(name);
-        country.setIsoCode3(isoCode3);
+        Country country = new Country(name, isoCode3);
         countryRepository.save(country);
     }
 
-    public List<CountryDTO> findAll() {
+    public List<Country> findAll() {
         List<Country> countries = countryRepository.findAll();
-        List<CountryDTO> countriesDTO = new ArrayList<>();
-        DtoFactory factory = DtoFactory.getInstance();
-
-        for(Country country : countries){
-            countriesDTO.add(factory.getDTOByModel(country, CountryDTO.class));
-        }
-
-        return countriesDTO;
+        return countries;
     }
-
+/*
     public CountryDTO findByAirportIATACode(String iataCode) {
         DtoFactory factory = DtoFactory.getInstance();
         Country country = airportRepository.findAirportByIataCode(iataCode).getCity().getState().getCountry();
         return factory.getDTOByModel(country, CountryDTO.class);
-    }
+    }*/
 
-    public CountryDTO findByIsoCode(String isoCode) {
-        DtoFactory factory = DtoFactory.getInstance();
+    public Country findByIsoCode(String isoCode) {
         Country country = countryRepository.findCountryByIsoCode3(isoCode);
-        return factory.getDTOByModel(country, CountryDTO.class);
+        return country;
     }
 
     public void update(String name, String originalIsoCode3, String newIsoCode3) throws NotFoundException {

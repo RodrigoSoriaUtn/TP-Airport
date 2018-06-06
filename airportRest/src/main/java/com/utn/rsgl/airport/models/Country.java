@@ -18,4 +18,10 @@ public class Country {
     @Column(name = "ISO_code3", nullable = false, unique = true)
     private String isoCode3;
 
+    public Country(String country, String iso) {
+        this.setName(country);
+        this.setIsoCode3(iso);
+    }
+
+    public Country() {}
 }

@@ -23,10 +23,13 @@ public class Airport {
     @JoinColumn(name = "FK_idCity", referencedColumnName = "PK_idCity", nullable = false)
     private City city;
 
-    @OneToMany(mappedBy = "departureAirport")
-    private List<Route> departureRoutes;
 
-    @OneToMany(mappedBy = "arrivalAirport")
-    private List<Route> arrivalRoutes;
+    public Airport(){}
+
+    public Airport(String airportName, String airportIataCode) {
+        this.setName(airportName);
+        this.setIataCode(airportIataCode);
+        this.setCity(null);
+    }
 
 }
