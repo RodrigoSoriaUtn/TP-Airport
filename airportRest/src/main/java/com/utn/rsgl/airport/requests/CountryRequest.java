@@ -9,5 +9,5 @@ public class CountryRequest {
     @JsonProperty
     private String name;
     @JsonProperty
-    private String ISOCode3;
+    private String isoCode3;
 }

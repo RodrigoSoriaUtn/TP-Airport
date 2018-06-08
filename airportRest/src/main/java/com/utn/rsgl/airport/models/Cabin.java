@@ -19,4 +19,8 @@ public class Cabin {
 
     @OneToMany(mappedBy = "cabin")
     private List<PricePerCabinPerRoute> prices;
+
+    public Cabin(String name) {
+        this.name = name;
+    }
 }

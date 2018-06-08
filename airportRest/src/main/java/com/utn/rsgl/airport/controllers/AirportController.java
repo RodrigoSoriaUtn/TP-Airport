@@ -26,8 +26,11 @@ public class AirportController{
     public @ResponseBody ResponseEntity save( @RequestBody AirportRequest airport) {
         ResponseEntity status = null ;
         try {
-            if(AccessVerifier.isLogued() && AccessVerifier.hasPermission())
-                airportService.save(airport.getName(), airport.getIATACode(), airport.getCityIATACode());
+            if(AccessVerifier.isLogued() && AccessVerifier.hasPermission()){
+                airportService.save(airport);
+            }else {
+                status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            }
         } catch (NotFoundException e) {
             e.printStackTrace();
             status = new ResponseEntity(HttpStatus.NOT_FOUND);

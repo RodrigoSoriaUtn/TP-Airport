@@ -29,7 +29,7 @@ public class CountryController{
         ResponseEntity status = null;
         try {
             if(AccessVerifier.isLogued() && AccessVerifier.hasPermission())
-                countryService.save(countryRequest.getName(), countryRequest.getISOCode3());
+                countryService.save(countryRequest.getName(), countryRequest.getIsoCode3());
             else
                 status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
         } catch (DataAlreadyExistsException e) {
@@ -47,7 +47,7 @@ public class CountryController{
         ResponseEntity status = null;
         try {
             if(AccessVerifier.isLogued() && AccessVerifier.hasPermission()) {
-                countryService.update(previousIsoCode3, countryRequest.getName(), countryRequest.getISOCode3());
+                countryService.update(previousIsoCode3, countryRequest.getName(), countryRequest.getIsoCode3());
             }else{
                 status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
@@ -58,7 +58,6 @@ public class CountryController{
             e.printStackTrace();
             status = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         if(status == null){
             status = new ResponseEntity(HttpStatus.OK);
         }
@@ -82,7 +81,7 @@ public class CountryController{
         ResponseEntity status = null;
         try {
             if (AccessVerifier.isLogued() && AccessVerifier.hasPermission()) {
-                countryService.remove(countryRequest.getName(), countryRequest.getISOCode3());
+                countryService.remove(countryRequest.getName(), countryRequest.getIsoCode3());
             } else {
                 status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
