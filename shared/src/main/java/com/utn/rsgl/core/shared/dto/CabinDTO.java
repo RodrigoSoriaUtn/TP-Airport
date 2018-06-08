@@ -9,4 +9,8 @@ public class CabinDTO {
 	@JsonProperty("name")
 	private String name;
 
+	public CabinDTO(String name){
+		this.name = name;
+	}
+
 }

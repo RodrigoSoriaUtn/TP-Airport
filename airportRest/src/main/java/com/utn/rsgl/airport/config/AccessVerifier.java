@@ -3,7 +3,7 @@ package com.utn.rsgl.airport.config;
 public class AccessVerifier {
 
     public static boolean hasPermission(){
-        boolean hasPermission = true;
+        boolean hasPermission = isLogued();
         //TODO : security for user permission.
 
         return hasPermission;

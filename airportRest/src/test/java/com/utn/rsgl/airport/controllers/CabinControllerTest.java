@@ -59,14 +59,14 @@ public class CabinControllerTest {
         verify(request).getParameter("name");
         verify(cabinService).getCabin("tourist");
 
-        List<CabinDTO> mycabin = (List<CabinDTO>) myEntity.getBody();
+        List<CabinDTO> myCabin = (List<CabinDTO>) myEntity.getBody();
 
         Assert.assertNotNull(myEntity);
         Assert.assertTrue(myEntity.hasBody());
         Assert.assertEquals(myEntity.getStatusCode(), HttpStatus.ACCEPTED);
         Assert.assertTrue(myEntity.getBody() instanceof  List<CabinDTO>);
-        Assert.assertEquals(1, mycabin.size());
-        Assert.assertEquals("turist", mycabin.get(0).getName);
+        Assert.assertEquals(1, myCabin.size());
+        Assert.assertEquals("turist", myCabin.get(0).getName());
     }
 
     @Test
@@ -83,15 +83,14 @@ public class CabinControllerTest {
         verify(request).getParameter("name");
         verify(cabinService).getAll();
 
-        List<CabinDTO> mycabin = new ArrayList();
-        mycabin = (List<CabinDTO>) myEntity.getBody();
+        List<CabinDTO> mycabin = (List<CabinDTO>) myEntity.getBody();
 
         Assert.assertNotNull(myEntity);
         Assert.assertTrue(myEntity.hasBody());
         Assert.assertEquals(myEntity.getStatusCode(), HttpStatus.ACCEPTED);
         Assert.assertTrue(myEntity.getBody() instanceof  List<CabinDTO>);
         Assert.assertEquals(2, mycabin.size());
-        Assert.assertEquals("turist", mycabin.get(0).getName);
+        Assert.assertEquals("turist", mycabin.get(0).getName());
     }
 
     @Test

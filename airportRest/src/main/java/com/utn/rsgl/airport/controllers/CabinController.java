@@ -1,8 +1,11 @@
 package com.utn.rsgl.airport.controllers;
 
+import com.utn.rsgl.airport.config.AccessVerifier;
+import com.utn.rsgl.airport.exceptions.DataAlreadyExistsException;
 import com.utn.rsgl.airport.requests.CabinRequest;
 import com.utn.rsgl.airport.service.CabinService;
 import com.utn.rsgl.core.shared.dto.CabinDTO;
+import javassist.NotFoundException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +32,11 @@ public class CabinController {
         try{
             cabinService.saveCabin(cabinRequest);
             myResponseEntity = new ResponseEntity(HttpStatus.CREATED);
+        }catch (DataAlreadyExistsException e) {
+            e.printStackTrace();
+            myResponseEntity = new ResponseEntity(HttpStatus.IM_USED);
         }catch(Exception e){
+            e.printStackTrace();
             myResponseEntity = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return  myResponseEntity;
@@ -40,7 +47,7 @@ public class CabinController {
         List<CabinDTO> cabins = new ArrayList();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        headers.add("Responded", "CartWebController");
+        headers.add("Responded", "CabinWebController");
         try{
             if (Objects.isNull(request.getParameter("name"))) {
                 cabins = cabinService.getAll();
@@ -53,19 +60,27 @@ public class CabinController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateCabin(@RequestBody CabinRequest cabinRequest){
-        ResponseEntity myResponseEntity;
-        try{
-            if(cabinService.getCabin(cabinRequest.getName())==null) {
-                myResponseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
-            }else{
-                cabinService.updateCabin(cabinRequest);
+    @RequestMapping(value = "/{previousName}",method = RequestMethod.PUT)
+    public ResponseEntity updateCabin(@RequestBody CabinRequest cabinRequest,
+                                      @PathVariable("previousName") String previousName){
+        ResponseEntity myResponseEntity = null;
+        try {
+            if(AccessVerifier.hasPermission()){
+                cabinService.updateCabin(cabinRequest, previousName);
                 myResponseEntity = new ResponseEntity(HttpStatus.OK);
+            }else{
+                myResponseEntity = new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
+        } catch (DataAlreadyExistsException e) {
+            e.printStackTrace();
+            myResponseEntity = new ResponseEntity(HttpStatus.IM_USED);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            myResponseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
         }catch(Exception e){
             myResponseEntity = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return  myResponseEntity;
     }
 
@@ -73,17 +88,18 @@ public class CabinController {
     public ResponseEntity deleteCabin(@RequestBody CabinRequest cabinRequest){
         ResponseEntity myResponseEntity;
         try{
-            if(cabinService.getCabin(cabinRequest.getName())==null)
-            {
-                myResponseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
-            }else{
+            if(AccessVerifier.hasPermission()){
                 cabinService.deleteCabin(cabinRequest);
                 myResponseEntity = new ResponseEntity(HttpStatus.OK);
+            }else{
+                myResponseEntity = new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
+        }catch (NotFoundException e){
+            myResponseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
         }catch(Exception e){
             myResponseEntity = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return  myResponseEntity;
 
+        return  myResponseEntity;
     }
 }
