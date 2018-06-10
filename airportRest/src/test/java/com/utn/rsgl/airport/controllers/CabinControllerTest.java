@@ -1,5 +1,6 @@
 package com.utn.rsgl.airport.controllers;
 
+import com.utn.rsgl.airport.exceptions.DataAlreadyExistsException;
 import com.utn.rsgl.airport.requests.CabinRequest;
 import com.utn.rsgl.airport.service.CabinService;
 import com.utn.rsgl.core.shared.dto.CabinDTO;
@@ -12,10 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,15 +40,20 @@ public class CabinControllerTest {
     public void addCabinTestHappyWay(){
         CabinRequest cabin = new CabinRequest("turist");
         ResponseEntity myEntity = this.cabinController.addCabin(cabin);
-        verify(cabinService).saveCabin(cabin);
+        try{
+            verify(cabinService).saveCabin(cabin);
+        } catch (Exception e) {}
         Assert.assertEquals(HttpStatus.CREATED, myEntity.getStatusCode());
     }
 
     @Test
     public void addCabinTestSadWay(){
         CabinRequest cabin = new CabinRequest("turist");
-        when(cabinService.saveCabin(cabin)).thenThrow(new Exception());
-        ResponseEntity myEntity = this.cabinController.addCabin(cabin);
+        ResponseEntity myEntity;
+        try{
+            doThrow(new DataAlreadyExistsException("error")).when(cabinService).saveCabin(cabin);
+            myEntity = this.cabinController.addCabin(cabin);
+        } catch (Exception e) {}
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, myEntity.getStatusCode());
     }
 
@@ -64,13 +72,13 @@ public class CabinControllerTest {
         Assert.assertNotNull(myEntity);
         Assert.assertTrue(myEntity.hasBody());
         Assert.assertEquals(myEntity.getStatusCode(), HttpStatus.ACCEPTED);
-        Assert.assertTrue(myEntity.getBody() instanceof  List<CabinDTO>);
+        //Assert.assertTrue(myEntity.getBody() instanceof  List<CabinDTO>);
         Assert.assertEquals(1, myCabin.size());
         Assert.assertEquals("turist", myCabin.get(0).getName());
     }
 
     @Test
-    public void getCabinHappyWayWithParameter(){
+    public void getCabinHappyWayWithParameter2(){
         List<CabinDTO> cabins = new ArrayList<>();
         cabins.add(new CabinDTO("tourist"));
         cabins.add(new CabinDTO("first class"));
@@ -88,7 +96,7 @@ public class CabinControllerTest {
         Assert.assertNotNull(myEntity);
         Assert.assertTrue(myEntity.hasBody());
         Assert.assertEquals(myEntity.getStatusCode(), HttpStatus.ACCEPTED);
-        Assert.assertTrue(myEntity.getBody() instanceof  List<CabinDTO>);
+        //Assert.assertTrue(myEntity.getBody() instanceof  List<CabinDTO>);
         Assert.assertEquals(2, mycabin.size());
         Assert.assertEquals("turist", mycabin.get(0).getName());
     }

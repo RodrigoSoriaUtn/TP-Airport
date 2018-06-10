@@ -33,4 +33,13 @@ public class PricePerCabinPerRoute {
 
     @Column(name = "active", nullable = false)
     private boolean active;
+
+    public PricePerCabinPerRoute(Route route, Date vigencyFrom, Date vigencyTo, Cabin cabin, Double price, boolean active){
+        this.route = route;
+        this.vigencyFrom = vigencyFrom;
+        this.vigencyTo = vigencyTo;
+        this.cabin = cabin;
+        this.price = price;
+        this.active = active;
+    }
 }

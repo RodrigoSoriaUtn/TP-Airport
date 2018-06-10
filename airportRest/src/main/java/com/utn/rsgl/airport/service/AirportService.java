@@ -84,4 +84,12 @@ public class AirportService {
             }
             airportRepository.delete(airport);
     }
+
+    public AirportDTO listByIata(String iataCode) throws Exception {
+        Airport airport = airportRepository.findAirportByIataCode(iataCode);
+        if(airport == null){
+            throw new Exception("There is no airport with the IATA code: " + iataCode);
+        }
+        return DtoFactory.getInstance().getDTOByModel(airport, AirportDTO.class);
+    }
 }

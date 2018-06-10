@@ -192,7 +192,7 @@ public class AirportServiceTest {
         when(airportRepository.findAirportByIataCode(previousAirportIataCode)).thenReturn(new Airport("Brasil", previousAirportIataCode));
         when(airportRepository.findAirportByIataCode(iataCode)).thenReturn(new Airport(name,iataCode));
         when(cityRepository.findByIataCode(iataCode)).thenReturn(new City("Mar del plata", cityIataCode));
-        boolean catched = false;
+        boolean catched;
 
         catched = checkDataAlreadyExistException(previousAirportIataCode);
 
@@ -210,7 +210,6 @@ public class AirportServiceTest {
             Assert.assertTrue(e instanceof DataAlreadyExistsException);
             resp = true;
         }
-
         return resp;
     }
 
@@ -224,7 +223,7 @@ public class AirportServiceTest {
         when(airportRepository.findAirportByIataCode(previousAirportIataCode)).thenReturn(originalAirport);
         when(airportRepository.findAirportByIataCode(iataCode)).thenReturn(foundAirport);
         when(cityRepository.findByIataCode(iataCode)).thenReturn(new City("Mar del plata", cityIataCode));
-        boolean catched = false;
+        boolean catched;
 
         catched = checkDataAlreadyExistException(previousAirportIataCode);
 
@@ -233,6 +232,13 @@ public class AirportServiceTest {
 
     @Test
     public void updateTest(){
+        String previousAirportIataCode = "BRA";
+        Airport originalAirport = new Airport("Brasil", previousAirportIataCode);
+        originalAirport.setId(5);
+        AirportRequest airport = new AirportRequest("BRA", "Brasilia", "BSA");
 
+        when(airportRepository.findAirportByIataCode("BRA")).thenReturn(originalAirport);
+        when(cityRepository.findByIataCode(airport.getCityIataCode())).thenReturn(new City("Buenos Aires", "BSA"));
+        when(airportRepository.findAirportByIataCode(airport.getIataCode())).thenReturn(originalAirport);
     }
 }

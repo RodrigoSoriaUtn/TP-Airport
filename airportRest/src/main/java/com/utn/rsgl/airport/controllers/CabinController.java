@@ -47,7 +47,7 @@ public class CabinController {
         List<CabinDTO> cabins = new ArrayList();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        headers.add("Responded", "CabinWebController");
+        headers.add("Responded", "CabinController");
         try{
             if (Objects.isNull(request.getParameter("name"))) {
                 cabins = cabinService.getAll();
@@ -63,7 +63,7 @@ public class CabinController {
     @RequestMapping(value = "/{previousName}",method = RequestMethod.PUT)
     public ResponseEntity updateCabin(@RequestBody CabinRequest cabinRequest,
                                       @PathVariable("previousName") String previousName){
-        ResponseEntity myResponseEntity = null;
+        ResponseEntity myResponseEntity;
         try {
             if(AccessVerifier.hasPermission()){
                 cabinService.updateCabin(cabinRequest, previousName);

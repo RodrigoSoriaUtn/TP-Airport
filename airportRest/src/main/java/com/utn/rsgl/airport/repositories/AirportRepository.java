@@ -5,6 +5,7 @@ import com.utn.rsgl.airport.models.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -18,6 +19,7 @@ public interface AirportRepository extends JpaRepository<Airport, Long> {
     @Modifying
     @Query("update Airport" +
             " set name = :name, iataCode = :iataCode, city = :city " +
-            " where id = :id ")
-    public Airport update(Long id, String name, String iataCode, City city);
+            " where id = :idCabin ")
+    public Airport update(@Param("idCabin") Long id, @Param("name") String name, @Param("iataCode") String iataCode,
+                          @Param("city") City city);
 }

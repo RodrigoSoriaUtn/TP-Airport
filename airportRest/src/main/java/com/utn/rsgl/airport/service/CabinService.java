@@ -31,8 +31,7 @@ public class CabinService {
 
     public void deleteCabin(CabinRequest cabinRequest) throws NotFoundException {
         Cabin cabin = cabinRepository.findCabinByName(cabinRequest.getName());
-        if( cabin == null)
-        {
+        if( cabin == null) {
             throw new NotFoundException("The cabin with the name: " + cabinRequest.getName() + " can not be found");
         }
         cabinRepository.delete(cabin);

@@ -13,7 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/aiports", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -65,26 +68,38 @@ public class AirportController{
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<AirportDTO>> list(){
-        List<AirportDTO> airportDtos = airportService.listAll();
+    public ResponseEntity<List<AirportDTO>> list(HttpServletRequest request){
+        List<AirportDTO> airportDtos = new ArrayList<>();
+        ResponseEntity response;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.add("response", "AirportController");
-
-
-        return ResponseEntity.accepted().headers(headers).body(airportDtos);
+        try{
+            if(Objects.isNull(request.getParameter("iataCode"))){
+                airportDtos = airportService.listAll();
+            }else{
+                airportDtos.add(airportService.listByIata(request.getParameter("iataCode")));
+            }
+            response = ResponseEntity.accepted().headers(headers).body(airportDtos);
+        } catch(NotFoundException e){
+            e.printStackTrace();
+            response = new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            response = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity delete(@RequestBody AirportRequest airportRequest){
-        ResponseEntity status = null;
+        ResponseEntity status;
         try {
             airportService.remove(airportRequest);
+            status = new ResponseEntity(HttpStatus.OK);
         } catch (NotFoundException e) {
             e.printStackTrace();
             status = new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        if(status == null) status = new ResponseEntity(HttpStatus.OK);
         return status;
     }
 
