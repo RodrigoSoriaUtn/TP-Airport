@@ -49,7 +49,7 @@ public class CabinControllerTest {
     @Test
     public void addCabinTestSadWay(){
         CabinRequest cabin = new CabinRequest("turist");
-        ResponseEntity myEntity;
+        ResponseEntity myEntity = null;
         try{
             doThrow(new DataAlreadyExistsException("error")).when(cabinService).saveCabin(cabin);
             myEntity = this.cabinController.addCabin(cabin);

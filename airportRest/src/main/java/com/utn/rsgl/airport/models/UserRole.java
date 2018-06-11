@@ -9,11 +9,10 @@ import javax.persistence.*;
 @Data
 public class UserRole {
 
-	@GeneratedValue
-	@Id
+	@Id @GeneratedValue
 	@Column(name="PK_idRole")
-	long idRole;
+	private long idRole;
 
 	@Column(name = "role")
-	String role;
+	private String role;
 }

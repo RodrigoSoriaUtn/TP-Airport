@@ -64,14 +64,10 @@ public class PricePerCabinPerRouteService {
         if(Objects.isNull(originalRoute)){
             throw new NotFoundException("cant find the route with the id :" + id);
         }
-        originalRoute.setActive(request.isActive());
-        originalRoute.setCabin(cabinRepository.findCabinByName(request.getCabinName()));
-        originalRoute.setPrice(request.getPrice());
-        originalRoute.setRoute(routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrival, departure));
-        originalRoute.setVigencyFrom(vigencyFrom);
-        originalRoute.setVigencyTo(vigencyTo);
 
-        priceRepository.update(originalRoute);
+        priceRepository.update(request.isActive(), request.getPrice(),
+                routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrival, departure),
+                cabinRepository.findCabinByName(request.getCabinName()), vigencyFrom, vigencyTo, originalRoute.getId());
     }
 
     public List<PricePerCabinPerRouteDTO> getByRoute(PricePerCabinPerRouteRequest request){

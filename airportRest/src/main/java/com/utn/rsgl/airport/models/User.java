@@ -9,8 +9,7 @@ import java.util.Date;
 @Table(name = "users")
 @Data
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_user")
 	private Long id;
 
@@ -18,35 +17,34 @@ public class User {
 	 *
 	 */
 	@Column(name= "name", nullable = false)
-	String name;
+	private String name;
 
 	/** the username of the user. it must be unique.
 	 *
 	 */
 	@Column(name = "username", nullable = false, unique = true)
-	String username;
+	private String username;
 
 	/** the password of the user
 	 *
 	 */
 	@Column(name = "password", nullable = false)
-	String password;
+	private String password;
 
 	/** the email of the user
 	 *
 	 */
 	@Column(name = "email", nullable = false)
-	String email;
+	private String email;
 
 	/** the birthDate. is type Date.
 	 *
 	 */
 	@Column(name = "birth_date", nullable = true)
-	Date birthDate;
+	private Date birthDate;
 
 	@ManyToOne
 	@JoinColumn(name = "FK_idRole", referencedColumnName = "PK_idRole", nullable = false)
-	@Column(name = "role")
 	UserRole role;
 
 	public User(){}
