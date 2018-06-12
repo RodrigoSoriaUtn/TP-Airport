@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Controller
+@RequestMapping(value = "/travels", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class PricePerCabinPerRouteController {
 
     @Autowired
@@ -78,7 +79,7 @@ public class PricePerCabinPerRouteController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity get(@RequestBody PricePerCabinPerRouteRequest priceRequest, HttpServletRequest request){
+    public @ResponseBody ResponseEntity<List<PricePerCabinPerRouteDTO>> get(HttpServletRequest request){
         List<PricePerCabinPerRouteDTO> pricesDtos;
         ResponseEntity response;
         HttpHeaders headers = new HttpHeaders();
@@ -88,10 +89,11 @@ public class PricePerCabinPerRouteController {
             if(Objects.isNull(request.getParameter("arrivalIataCode")) || Objects.isNull(request.getParameter("departureIataCode"))){
                 pricesDtos = priceService.listAll();
             }else{
-                pricesDtos = priceService.getByRoute(priceRequest);
+                pricesDtos = priceService.getByRoute(request.getParameter("arrivalIataCode"), request.getParameter("departureIataCode"));
             }
             response = ResponseEntity.accepted().headers(headers).body(pricesDtos);
         } catch (Exception e){
+            e.printStackTrace();
             response = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;

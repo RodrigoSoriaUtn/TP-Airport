@@ -8,9 +8,11 @@ import java.util.Date;
 @Data
 public class PricePerCabinPerRouteDTO {
 
-	@JsonProperty("from")
+	@JsonProperty("route")
+	private RouteDTO route;
+	@JsonProperty("vigencyFrom")
 	private String vigencyFrom;
-	@JsonProperty("to")
+	@JsonProperty("vigencyTo")
 	private String vigencyTo;
 	@JsonProperty("cabin")
 	private CabinDTO cabin;

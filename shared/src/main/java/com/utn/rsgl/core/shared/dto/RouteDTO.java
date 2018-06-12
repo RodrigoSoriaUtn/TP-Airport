@@ -11,6 +11,4 @@ public class RouteDTO {
 	private AirportDTO departureAirport;
 	@JsonProperty("arrival")
 	private AirportDTO arrivalAirport;
-	@JsonProperty("prices")
-	private List<PricePerCabinPerRouteDTO> prices;
 }

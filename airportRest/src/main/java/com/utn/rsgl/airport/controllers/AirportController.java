@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/aiports", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/airports", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class AirportController{
 
     @Autowired
@@ -49,7 +49,8 @@ public class AirportController{
     }
 
     @RequestMapping(value = "/{previousIataCode}", method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody AirportRequest airportRequest, @PathVariable("previousIataCode") String iataCode){
+    public ResponseEntity update(@RequestBody AirportRequest airportRequest,
+                                 @PathVariable("previousIataCode") String iataCode){
         ResponseEntity status = null;
         try{
            airportService.update(airportRequest, iataCode);

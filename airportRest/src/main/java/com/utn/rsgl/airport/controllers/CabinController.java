@@ -56,6 +56,7 @@ public class CabinController {
             }
             return ResponseEntity.accepted().headers(headers).body(cabins);
         }catch(Exception e) {
+            e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -78,6 +79,7 @@ public class CabinController {
             e.printStackTrace();
             myResponseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
         }catch(Exception e){
+            e.printStackTrace();
             myResponseEntity = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -95,8 +97,10 @@ public class CabinController {
                 myResponseEntity = new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
         }catch (NotFoundException e){
+            e.printStackTrace();
             myResponseEntity = new ResponseEntity(HttpStatus.NOT_FOUND);
         }catch(Exception e){
+            e.printStackTrace();
             myResponseEntity = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

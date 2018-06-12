@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "routes")
 @Data
 public class Route {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PK_idRoute")
     private long id;
 
@@ -19,9 +19,4 @@ public class Route {
     @ManyToOne
     @JoinColumn(name = "FK_arrivalAirport", referencedColumnName = "PK_idAirport", nullable = false)
     private Airport arrivalAirport;
-
-    @OneToMany(mappedBy = "route")
-    private List<PricePerCabinPerRoute> prices;
-
-
 }

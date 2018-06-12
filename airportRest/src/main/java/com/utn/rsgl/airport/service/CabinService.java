@@ -10,6 +10,7 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,7 +51,12 @@ public class CabinService {
     }
 
     public List<CabinDTO> getAll(){
-        return DtoFactory.getInstance().getDTOByModel( cabinRepository.findAll(), CabinDTO.class);
+        List<Cabin> cabins = cabinRepository.findAll();
+        List<CabinDTO> cabinDtos = new ArrayList<>();
+        for(Cabin cabin : cabins){
+            cabinDtos.add(DtoFactory.getInstance().getDTOByModel(cabin,CabinDTO.class));
+        }
+        return cabinDtos;
     }
 
 }

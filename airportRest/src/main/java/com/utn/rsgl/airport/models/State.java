@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "states")
 @Data
 public class State {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PK_idState")
     private long id;
 

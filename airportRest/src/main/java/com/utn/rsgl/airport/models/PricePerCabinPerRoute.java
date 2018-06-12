@@ -8,7 +8,7 @@ import java.util.Date;
 @Table(name = "pricePerCabinPerRoute")
 @Data
 public class PricePerCabinPerRoute {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PK_idPricePerCabinPerRoute")
     private long id;
 
@@ -33,6 +33,8 @@ public class PricePerCabinPerRoute {
 
     @Column(name = "active", nullable = false)
     private boolean active;
+
+    public PricePerCabinPerRoute(){}
 
     public PricePerCabinPerRoute(Route route, Date vigencyFrom, Date vigencyTo, Cabin cabin, Double price, boolean active){
         this.route = route;

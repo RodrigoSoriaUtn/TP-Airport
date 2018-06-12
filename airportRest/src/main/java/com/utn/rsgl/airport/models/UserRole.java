@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 public class UserRole {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="PK_idRole")
 	private long idRole;
 

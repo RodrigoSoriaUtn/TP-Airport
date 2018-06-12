@@ -70,9 +70,9 @@ public class PricePerCabinPerRouteService {
                 cabinRepository.findCabinByName(request.getCabinName()), vigencyFrom, vigencyTo, originalRoute.getId());
     }
 
-    public List<PricePerCabinPerRouteDTO> getByRoute(PricePerCabinPerRouteRequest request){
-        Airport arrivalAirport = airportRepository.findAirportByIataCode(request.getArrivalAirportIataCode());
-        Airport departureAirport = airportRepository.findAirportByIataCode(request.getDepartureAirportIataCode());
+    public List<PricePerCabinPerRouteDTO> getByRoute(String arrivalAirportIatacode, String departureAirportIataCode){
+        Airport arrivalAirport = airportRepository.findAirportByIataCode(arrivalAirportIatacode);
+        Airport departureAirport = airportRepository.findAirportByIataCode(departureAirportIataCode);
         Route route = routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrivalAirport, departureAirport);
         List<PricePerCabinPerRouteDTO> pricesDto = new ArrayList<>();
         List<PricePerCabinPerRoute> prices = priceRepository.findPricePerCabinPerRouteByRoute(route);

@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "cities")
 @Data
 public class City {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PK_idCity")
     private long id;
 

@@ -8,7 +8,7 @@ import java.util.List;
 @Table(name = "countries")
 @Data
 public class Country {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PK_idCountry")
     private long id;
 

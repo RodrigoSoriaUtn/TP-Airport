@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "airports")
 @Data
 public class Airport {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "PK_idAirport")
     private long id;
 

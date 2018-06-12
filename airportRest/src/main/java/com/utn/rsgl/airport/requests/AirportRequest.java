@@ -14,4 +14,6 @@ public class AirportRequest {
     private String iataCode;
     @JsonProperty
     private String cityIataCode;
+
+    public AirportRequest(){}
 }
