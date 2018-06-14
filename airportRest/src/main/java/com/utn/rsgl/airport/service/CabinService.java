@@ -21,7 +21,7 @@ public class CabinService {
     @Setter
     private  CabinRepository cabinRepository;
 
-    public void save(CabinRequest cabin) throws DataAlreadyExistsException, IllegalArgumentException {
+    public void save(CabinRequest cabin) throws DataAlreadyExistsException, IllegalArgumentException, Exception {
         if(cabin != null || cabin.getName() != null || cabin.getName().equals("")){
             throw new IllegalArgumentException("The cabin is null or the name is empty");
         }
@@ -31,12 +31,19 @@ public class CabinService {
         cabinRepository.save(new Cabin(cabin.getName()));
     }
 
-    public CabinDTO getCabin(String cabin){
-        return DtoFactory.getInstance().getDTOByModel(cabinRepository.findCabinByName(cabin), CabinDTO.class);
+    public CabinDTO getCabin(String cabinName) throws IllegalArgumentException, NotFoundException, Exception{
+        if(cabinName == null || cabinName.isEmpty()){
+            throw new IllegalArgumentException("The cabinName is null or empty");
+        }
+        Cabin cabin = cabinRepository.findCabinByName(cabinName);
+        if(cabin == null){
+            throw new NotFoundException("there is no cabin with the name :" + cabinName);
+        }
+        return DtoFactory.getInstance().getDTOByModel(cabin, CabinDTO.class);
     }
 
     public void delete(CabinRequest cabinRequest) throws NotFoundException, IllegalArgumentException {
-        if(cabinRequest != null && cabinRequest.getName() != null && cabinRequest.getName().equals("")){
+        if(cabinRequest == null || cabinRequest.getName() == null || cabinRequest.getName().isEmpty()){
             throw new IllegalArgumentException("The cabin is null or the name is empty");
         }
         Cabin cabin = cabinRepository.findCabinByName(cabinRequest.getName());

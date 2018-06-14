@@ -51,6 +51,7 @@ public class CabinController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.add("Responded", "CabinController");
+        ResponseEntity response;
         try{
             if (Objects.isNull(request.getParameter("name"))) {
                 cabins = cabinService.listAll();
@@ -58,10 +59,18 @@ public class CabinController {
                 cabins.add(cabinService.getCabin(request.getParameter("name")));
             }
             return ResponseEntity.accepted().headers(headers).body(cabins);
-        }catch(Exception e) {
+        }catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }catch (NotFoundException e){
+            e.printStackTrace();
+            response = new ResponseEntity(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            response = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        return response;
     }
 
     @RequestMapping(value = "/{previousName}",method = RequestMethod.PUT)
