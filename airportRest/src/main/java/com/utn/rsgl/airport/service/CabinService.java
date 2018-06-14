@@ -7,6 +7,7 @@ import com.utn.rsgl.airport.repositories.CabinRepository;
 import com.utn.rsgl.airport.requests.CabinRequest;
 import com.utn.rsgl.core.shared.dto.CabinDTO;
 import javassist.NotFoundException;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,13 @@ import java.util.List;
 public class CabinService {
 
     @Autowired
+    @Setter
     private  CabinRepository cabinRepository;
 
-    public void saveCabin(CabinRequest cabin) throws DataAlreadyExistsException {
+    public void save(CabinRequest cabin) throws DataAlreadyExistsException, IllegalArgumentException {
+        if(cabin != null || cabin.getName() != null || cabin.getName().equals("")){
+            throw new IllegalArgumentException("The cabin is null or the name is empty");
+        }
         if(cabinRepository.findCabinByName(cabin.getName()) != null){
             throw new DataAlreadyExistsException(" A cabin with the name: " + cabin.getName() + "already exists!");
         }
@@ -30,7 +35,10 @@ public class CabinService {
         return DtoFactory.getInstance().getDTOByModel(cabinRepository.findCabinByName(cabin), CabinDTO.class);
     }
 
-    public void deleteCabin(CabinRequest cabinRequest) throws NotFoundException {
+    public void delete(CabinRequest cabinRequest) throws NotFoundException, IllegalArgumentException {
+        if(cabinRequest != null && cabinRequest.getName() != null && cabinRequest.getName().equals("")){
+            throw new IllegalArgumentException("The cabin is null or the name is empty");
+        }
         Cabin cabin = cabinRepository.findCabinByName(cabinRequest.getName());
         if( cabin == null) {
             throw new NotFoundException("The cabin with the name: " + cabinRequest.getName() + " can not be found");
@@ -38,7 +46,7 @@ public class CabinService {
         cabinRepository.delete(cabin);
     }
 
-    public void updateCabin(CabinRequest cabin, String previousName) throws DataAlreadyExistsException, NotFoundException {
+    public void update(CabinRequest cabin, String previousName) throws DataAlreadyExistsException, NotFoundException {
         Cabin previousCabin = cabinRepository.findCabinByName(previousName);
         Cabin newCabin = cabinRepository.findCabinByName(cabin.getName());
         if(previousCabin == null){
@@ -50,7 +58,7 @@ public class CabinService {
         cabinRepository.update(cabin.getName(), previousCabin.getId());
     }
 
-    public List<CabinDTO> getAll(){
+    public List<CabinDTO> listAll(){
         List<Cabin> cabins = cabinRepository.findAll();
         List<CabinDTO> cabinDtos = new ArrayList<>();
         for(Cabin cabin : cabins){

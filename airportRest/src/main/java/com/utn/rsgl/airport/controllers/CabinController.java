@@ -27,15 +27,18 @@ public class CabinController {
     private CabinService cabinService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity addCabin(@RequestBody CabinRequest cabinRequest){
+    public ResponseEntity addCabin(@RequestBody CabinRequest cabinRequest) {
         ResponseEntity myResponseEntity;
-        try{
-            cabinService.saveCabin(cabinRequest);
+        try {
+            cabinService.save(cabinRequest);
             myResponseEntity = new ResponseEntity(HttpStatus.CREATED);
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+            myResponseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
         }catch (DataAlreadyExistsException e) {
             e.printStackTrace();
             myResponseEntity = new ResponseEntity(HttpStatus.IM_USED);
-        }catch(Exception e){
+        }catch (Exception e){
             e.printStackTrace();
             myResponseEntity = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -50,7 +53,7 @@ public class CabinController {
         headers.add("Responded", "CabinController");
         try{
             if (Objects.isNull(request.getParameter("name"))) {
-                cabins = cabinService.getAll();
+                cabins = cabinService.listAll();
             }else {
                 cabins.add(cabinService.getCabin(request.getParameter("name")));
             }
@@ -67,7 +70,7 @@ public class CabinController {
         ResponseEntity myResponseEntity;
         try {
             if(AccessVerifier.hasPermission()){
-                cabinService.updateCabin(cabinRequest, previousName);
+                cabinService.update(cabinRequest, previousName);
                 myResponseEntity = new ResponseEntity(HttpStatus.OK);
             }else{
                 myResponseEntity = new ResponseEntity(HttpStatus.UNAUTHORIZED);
@@ -91,7 +94,7 @@ public class CabinController {
         ResponseEntity myResponseEntity;
         try{
             if(AccessVerifier.hasPermission()){
-                cabinService.deleteCabin(cabinRequest);
+                cabinService.delete(cabinRequest);
                 myResponseEntity = new ResponseEntity(HttpStatus.OK);
             }else{
                 myResponseEntity = new ResponseEntity(HttpStatus.UNAUTHORIZED);

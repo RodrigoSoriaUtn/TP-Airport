@@ -43,14 +43,9 @@ public class User {
 	@Column(name = "birth_date", nullable = true)
 	private Date birthDate;
 
-	@ManyToOne
-	@JoinColumn(name = "FK_idRole", referencedColumnName = "PK_idRole", nullable = false)
-	UserRole role;
-
 	public User(){}
 
-	public User(String name, String username, String password, String email,
-			UserRole role,  String birthDate) {
+	public User(String name, String username, String password, String email, String birthDate) {
 		try{
 
 			this.name = name;
@@ -59,7 +54,6 @@ public class User {
 			this.password=password;
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			this.birthDate= sdf.parse(birthDate);
-			this.role = role;
 
 		}catch (Exception e){
 			e.getMessage();

@@ -4,6 +4,7 @@ import com.utn.rsgl.airport.exceptions.DataAlreadyExistsException;
 import com.utn.rsgl.airport.requests.CabinRequest;
 import com.utn.rsgl.airport.service.CabinService;
 import com.utn.rsgl.core.shared.dto.CabinDTO;
+import org.apache.maven.doxia.document.DocumentTOC;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,21 +38,43 @@ public class CabinControllerTest {
     }
 
     @Test
-    public void addCabinTestHappyWay(){
+    public void saveTest(){
         CabinRequest cabin = new CabinRequest("turist");
         ResponseEntity myEntity = this.cabinController.addCabin(cabin);
         try{
-            verify(cabinService).saveCabin(cabin);
+            verify(cabinService).save(cabin);
         } catch (Exception e) {}
         Assert.assertEquals(HttpStatus.CREATED, myEntity.getStatusCode());
     }
 
     @Test
-    public void addCabinTestSadWay(){
+    public void saveIllegalArgumentExceptionTest(){
         CabinRequest cabin = new CabinRequest("turist");
         ResponseEntity myEntity = null;
         try{
-            doThrow(new DataAlreadyExistsException("error")).when(cabinService).saveCabin(cabin);
+            doThrow(new IllegalArgumentException("error")).when(cabinService).save(cabin);
+            myEntity = this.cabinController.addCabin(cabin);
+        } catch (Exception e) {}
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, myEntity.getStatusCode());
+    }
+
+    @Test
+    public void saveDataAlreadyExistsExceptionTest(){
+        CabinRequest cabin = new CabinRequest("turist");
+        ResponseEntity myEntity = null;
+        try{
+            doThrow(new DataAlreadyExistsException("error")).when(cabinService).save(cabin);
+            myEntity = this.cabinController.addCabin(cabin);
+        } catch (Exception e) {}
+        Assert.assertEquals(HttpStatus.IM_USED, myEntity.getStatusCode());
+    }
+
+    @Test
+    public void saveExceptionTest(){
+        CabinRequest cabin = new CabinRequest("turist");
+        ResponseEntity myEntity = null;
+        try{
+            doThrow(new Exception("error")).when(cabinService).save(cabin);
             myEntity = this.cabinController.addCabin(cabin);
         } catch (Exception e) {}
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, myEntity.getStatusCode());
@@ -84,12 +107,12 @@ public class CabinControllerTest {
         cabins.add(new CabinDTO("first class"));
 
         when(request.getParameter("name")).thenReturn(null);
-        when(cabinService.getAll()).thenReturn(cabins);
+        when(cabinService.listAll()).thenReturn(cabins);
 
         ResponseEntity myEntity = cabinController.getCabin(request);
 
         verify(request).getParameter("name");
-        verify(cabinService).getAll();
+        verify(cabinService).listAll();
 
         List<CabinDTO> mycabin = (List<CabinDTO>) myEntity.getBody();
 
@@ -104,7 +127,7 @@ public class CabinControllerTest {
     @Test
     public void getCabinSAdWayTest(){
         when(request.getParameter("name")).thenReturn(null);
-        when(cabinService.getAll()).thenThrow(new Exception());
+        when(cabinService.listAll()).thenThrow(new Exception());
         ResponseEntity myEntity = this.cabinController.getCabin(request);
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, myEntity.getStatusCode());
     }
