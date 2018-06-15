@@ -30,6 +30,10 @@ public class PricePerCabinPerRouteService {
     @Autowired
     private CabinRepository cabinRepository;
 
+    public void setPricePerCabinPerRouteRepository(PricePerCabinPerRouteRepository repository) {
+        this.priceRepository = repository;
+    }
+
     public void save(PricePerCabinPerRouteRequest request){
         Airport arrivalAirport = airportRepository.findAirportByIataCode(request.getArrivalAirportIataCode());
         Airport departureAirport = airportRepository.findAirportByIataCode(request.getDepartureAirportIataCode());
@@ -95,4 +99,5 @@ public class PricePerCabinPerRouteService {
         priceRepository.delete(price);
 
     }
+
 }

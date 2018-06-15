@@ -127,7 +127,7 @@ public class CabinControllerTest {
     public void getByOneExceptionTest() {
         ResponseEntity entity = null;
         try {
-            doThrow(new Exception("error")).when(cabinService.getCabin("jorge"));
+            doThrow(new Exception("error")).when(cabinService).getCabin("jorge");
             when(request.getParameter("name")).thenReturn("jorge");
             entity = cabinController.getCabin(request);
             verify(request, times(2)).getParameter("name");
