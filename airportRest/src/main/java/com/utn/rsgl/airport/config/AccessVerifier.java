@@ -14,4 +14,5 @@ public class AccessVerifier {
         //TODO : checks if an user is logued.
         return isLogued;
     }
+
 }

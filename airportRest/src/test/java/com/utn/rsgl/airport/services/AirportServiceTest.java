@@ -157,12 +157,11 @@ public class AirportServiceTest {
 
     @Test
     public void updateNotFoundExceptionTest(){
-        String previousAirportIATACode = "BRA";
-        when(airportRepository.findAirportByIataCode(previousAirportIATACode)).thenReturn(null);
+        when(airportRepository.findAirportByIataCode(iataCode)).thenReturn(null);
         boolean catched = false;
         try {
-            airportService.update(new AirportRequest(name,iataCode,cityIataCode), previousAirportIATACode);
-            verify(airportRepository).findAirportByIataCode(previousAirportIATACode);
+            airportService.update(new AirportRequest(name,iataCode,cityIataCode));
+            verify(airportRepository).findAirportByIataCode(iataCode);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof NotFoundException);
             catched = true;
@@ -172,61 +171,16 @@ public class AirportServiceTest {
 
     @Test
     public void updateCityNotFoundException(){
-        String previousIataCode = "BRA";
-        when(airportRepository.findAirportByIataCode(previousIataCode)).thenReturn(new Airport("Brasil", previousIataCode));
+        when(airportRepository.findAirportByIataCode(iataCode)).thenReturn(new Airport("Brasil", iataCode));
         when(cityRepository.findByIataCode(cityIataCode)).thenReturn(null);
         boolean catched = false;
         try {
-            airportService.update(new AirportRequest(name,iataCode,cityIataCode), previousIataCode);
+            airportService.update(new AirportRequest(name,iataCode,cityIataCode));
             verify(cityRepository).findByIataCode(cityIataCode);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof NotFoundException);
             catched = true;
         }
-        Assert.assertTrue(catched);
-    }
-
-    @Test
-    public void updateDataAlreadyExistsExceptionTest(){
-        String previousAirportIataCode = "BRA";
-        when(airportRepository.findAirportByIataCode(previousAirportIataCode)).thenReturn(new Airport("Brasil", previousAirportIataCode));
-        when(airportRepository.findAirportByIataCode(iataCode)).thenReturn(new Airport(name,iataCode));
-        when(cityRepository.findByIataCode(iataCode)).thenReturn(new City("Mar del plata", cityIataCode));
-        boolean catched;
-
-        catched = checkDataAlreadyExistException(previousAirportIataCode);
-
-        Assert.assertTrue(catched);
-    }
-
-    private boolean checkDataAlreadyExistException(String previousAirportIataCode){
-        boolean resp = false;
-        try {
-            airportService.update(new AirportRequest(name,iataCode,cityIataCode), previousAirportIataCode);
-            verify(airportRepository).findAirportByIataCode(previousAirportIataCode);
-            verify(airportRepository).findAirportByIataCode(iataCode);
-            verify(cityRepository).findByIataCode(cityIataCode);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof DataAlreadyExistsException);
-            resp = true;
-        }
-        return resp;
-    }
-
-    @Test
-    public void updateIDDataAlreadyExistsExceptionTest(){
-        String previousAirportIataCode = "BRA";
-        Airport originalAirport = new Airport("Brasil", previousAirportIataCode);
-        originalAirport.setId(5);
-        Airport foundAirport = new Airport(name, iataCode);
-        foundAirport.setId(12);
-        when(airportRepository.findAirportByIataCode(previousAirportIataCode)).thenReturn(originalAirport);
-        when(airportRepository.findAirportByIataCode(iataCode)).thenReturn(foundAirport);
-        when(cityRepository.findByIataCode(iataCode)).thenReturn(new City("Mar del plata", cityIataCode));
-        boolean catched;
-
-        catched = checkDataAlreadyExistException(previousAirportIataCode);
-
         Assert.assertTrue(catched);
     }
 

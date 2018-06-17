@@ -85,11 +85,21 @@ public class PricePerCabinPerRouteController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.add("response", "AirportController");
+        String arrivalIataCode = request.getParameter("arrivalIataCode");
+        String departureIataCode = request.getParameter("departureIataCode");
+        String from = request.getParameter("from");
+        String to = request.getParameter("to");
+        boolean betweenDates = Objects.nonNull(from) && Objects.nonNull(to);
+        boolean betweenAirports = Objects.nonNull(arrivalIataCode) && Objects.nonNull(departureIataCode);
         try{
-            if(Objects.isNull(request.getParameter("arrivalIataCode")) || Objects.isNull(request.getParameter("departureIataCode"))){
-                pricesDtos = priceService.listAll();
+            if(betweenDates && betweenAirports){
+                pricesDtos = priceService.getByRouteAndDates(arrivalIataCode, departureIataCode, from, to);
+            }else if (betweenAirports){
+                pricesDtos = priceService.getByRoute(arrivalIataCode, departureIataCode);
+            }else if (betweenDates){
+                pricesDtos = priceService.getByDates(from, to);
             }else{
-                pricesDtos = priceService.getByRoute(request.getParameter("arrivalIataCode"), request.getParameter("departureIataCode"));
+                pricesDtos = priceService.listAll();
             }
             response = ResponseEntity.accepted().headers(headers).body(pricesDtos);
         } catch (Exception e){

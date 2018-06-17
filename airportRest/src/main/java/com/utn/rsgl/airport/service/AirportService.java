@@ -33,7 +33,7 @@ public class AirportService {
      * @throws NotFoundException if there is no city with that IATACode.
      * @throws DataAlreadyExistsException if the airport with that IATACode already exists.
      */
-    public void save(AirportRequest airportRequest) throws NotFoundException, DataAlreadyExistsException {
+    public void save(AirportRequest airportRequest) throws NotFoundException, DataAlreadyExistsException, Exception {
         City city = cityRepository.findByIataCode(airportRequest.getCityIataCode());
         if(city == null){
            throw new NotFoundException("city with the IATA code : " + airportRequest.getIataCode() + " wat not found on the Database.");
@@ -46,24 +46,18 @@ public class AirportService {
         airportRepository.save(airport);
     }
 
-    public void update(AirportRequest airportRequest, String previousAirportIATACode) throws NotFoundException,
-                                                                                            DataAlreadyExistsException {
-        Airport airport = airportRepository.findAirportByIataCode(previousAirportIATACode);
-        Airport airportWithNewIata = airportRepository.findAirportByIataCode(airportRequest.getIataCode());
-        City city = cityRepository.findByIataCode(airportRequest.getIataCode());
+    public void update(AirportRequest airportRequest) throws NotFoundException, Exception {
+        Airport airport = airportRepository.findAirportByIataCode(airportRequest.getIataCode());
+        City city = cityRepository.findByIataCode(airportRequest.getCityIataCode());
 
         if(airport == null){
-            throw new NotFoundException("The airport with the IATA Code : " + previousAirportIATACode
+            throw new NotFoundException("The airport with the IATA Code : " + airportRequest.getIataCode()
                                         + " that you are trying to update doesn't exists.");
+        }else if(city == null){
+            throw new NotFoundException("The city with the IATA code :" + airportRequest.getCityIataCode()
+                                        + " doesn't exists");
         }
-        if(cityRepository.findByIataCode(airportRequest.getIataCode()) == null){
-            throw new NotFoundException("The city with the IATA Code : " + airportRequest.getIataCode() + " doesn't exists");
-        }
-        if( airportWithNewIata != null && (!previousAirportIATACode.equals(airportRequest.getIataCode())
-                                           || !(airport.getId() != airportWithNewIata.getId())) ){
-            throw new DataAlreadyExistsException("The airport with the new Iata Code :"+airportRequest.getIataCode()+
-                                                 " already exist!");
-        }
+
         airportRepository.update(airport.getId(), airportRequest.getName(), airportRequest.getIataCode(), city);
     }
 
@@ -85,10 +79,10 @@ public class AirportService {
             airportRepository.delete(airport);
     }
 
-    public AirportDTO listByIata(String iataCode) throws Exception {
+    public AirportDTO listByIata(String iataCode) throws NotFoundException, Exception {
         Airport airport = airportRepository.findAirportByIataCode(iataCode);
         if(airport == null){
-            throw new Exception("There is no airport with the IATA code: " + iataCode);
+            throw new NotFoundException("There is no airport with the IATA code: " + iataCode);
         }
         return DtoFactory.getInstance().getDTOByModel(airport, AirportDTO.class);
     }

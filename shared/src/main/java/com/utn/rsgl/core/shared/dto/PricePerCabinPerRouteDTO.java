@@ -17,7 +17,7 @@ public class PricePerCabinPerRouteDTO {
 	@JsonProperty("cabin")
 	private CabinDTO cabin;
 	@JsonProperty("price")
-	private String price;
+	private Double price;
 	@JsonProperty("active")
 	private boolean active;
 

@@ -33,7 +33,7 @@ public class CabinService {
 
     public CabinDTO getCabin(String cabinName) throws IllegalArgumentException, NotFoundException, Exception{
         if(cabinName == null || cabinName.isEmpty()){
-            throw new IllegalArgumentException("The cabinName is null or empty");
+            throw new IllegalArgumentException("The cabin name is null or empty");
         }
         Cabin cabin = cabinRepository.findCabinByName(cabinName);
         if(cabin == null){
@@ -42,7 +42,7 @@ public class CabinService {
         return DtoFactory.getInstance().getDTOByModel(cabin, CabinDTO.class);
     }
 
-    public void delete(CabinRequest cabinRequest) throws NotFoundException, IllegalArgumentException {
+    public void delete(CabinRequest cabinRequest) throws NotFoundException, IllegalArgumentException, Exception {
         if(cabinRequest == null || cabinRequest.getName() == null || cabinRequest.getName().isEmpty()){
             throw new IllegalArgumentException("The cabin is null or the name is empty");
         }
@@ -53,14 +53,14 @@ public class CabinService {
         cabinRepository.delete(cabin);
     }
 
-    public void update(CabinRequest cabin, String previousName) throws DataAlreadyExistsException, NotFoundException {
+    public void update(CabinRequest cabin, String previousName) throws DataAlreadyExistsException, NotFoundException, Exception {
         Cabin previousCabin = cabinRepository.findCabinByName(previousName);
         Cabin newCabin = cabinRepository.findCabinByName(cabin.getName());
         if(previousCabin == null){
-            throw new NotFoundException("there is no cabin with the name: " + cabin.getName());
+            throw new NotFoundException("There is no cabin with the name: " + cabin.getName());
         }
         if( (previousCabin != null && newCabin != null) && newCabin.getId() != previousCabin.getId()){
-           throw new DataAlreadyExistsException(" a cabin with the name: " + cabin.getName() + " already exists");
+           throw new DataAlreadyExistsException(" A cabin with the name: " + cabin.getName() + " already exists");
         }
         cabinRepository.update(cabin.getName(), previousCabin.getId());
     }

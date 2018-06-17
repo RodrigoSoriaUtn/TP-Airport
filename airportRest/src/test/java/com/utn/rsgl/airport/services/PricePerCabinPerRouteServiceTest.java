@@ -1,35 +1,35 @@
 package com.utn.rsgl.airport.services;
 
-import com.utn.rsgl.airport.models.Airport;
-import com.utn.rsgl.airport.models.Cabin;
-import com.utn.rsgl.airport.models.Route;
+import com.utn.rsgl.airport.models.*;
 import com.utn.rsgl.airport.repositories.AirportRepository;
 import com.utn.rsgl.airport.repositories.CabinRepository;
 import com.utn.rsgl.airport.repositories.PricePerCabinPerRouteRepository;
 import com.utn.rsgl.airport.repositories.RouteRepository;
 import com.utn.rsgl.airport.requests.PricePerCabinPerRouteRequest;
 import com.utn.rsgl.airport.service.PricePerCabinPerRouteService;
+import com.utn.rsgl.core.shared.dto.*;
 import com.utn.rsgl.core.shared.utils.DateUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class PricePerCabinPerRouteServiceTest {
 
     @Mock
     private PricePerCabinPerRouteRepository repository;
-
     @Mock
     private AirportRepository airportRepository;
-
     @Mock
     private RouteRepository routeRepository;
-
     @Mock
     private CabinRepository cabinRepository;
 
@@ -38,143 +38,206 @@ public class PricePerCabinPerRouteServiceTest {
     private Date vigencyFrom;
     private Date vigencyTo;
     private PricePerCabinPerRouteRequest pricePerRouteRequest;
+    private PricePerCabinPerRouteDTO pricePerRouteDto;
+    private PricePerCabinPerRoute pricePerRouteReal;
 
     @Before
-    public void init(){
+    public void init() {
         this.service = new PricePerCabinPerRouteService();
         MockitoAnnotations.initMocks(this);
-        service.setPricePerCabinPerRouteRepository(repository);
+        service.setPriceRepository(repository);
+        service.setAirportRepository(airportRepository);
+        service.setCabinRepository(cabinRepository);
+        service.setRouteRepository(routeRepository);
+        vigencyFrom = DateUtils.StringToDate("2018-03-27");
+        vigencyTo = DateUtils.StringToDate("2018-10-12");
+        initPricePerRouteRequest();
+        initPricePerRouteDto();
+        initPricePerRouteReal();
+    }
+
+    private void initPricePerRouteRequest() {
         pricePerRouteRequest = new PricePerCabinPerRouteRequest();
         pricePerRouteRequest.setActive(true);
         pricePerRouteRequest.setArrivalAirportIataCode("LAN");
         pricePerRouteRequest.setDepartureAirportIataCode("NIC");
         pricePerRouteRequest.setId(1);
-        pricePerRouteRequest.setVigencyFrom("27-3-2018");
-        pricePerRouteRequest.setVigencyTo("12-10-2018");
-        pricePerRouteRequest.setPrice(8.30);
+        pricePerRouteRequest.setVigencyFrom(DateUtils.DateToString(vigencyFrom));
+        pricePerRouteRequest.setVigencyTo(DateUtils.DateToString(vigencyTo));
+        pricePerRouteRequest.setPrice(8.30D);
         pricePerRouteRequest.setCabinName("Economica");
-        vigencyFrom = DateUtils.StringToDate("27-3-2018");
-        vigencyTo = DateUtils.StringToDate("12-10-2018");
+    }
+
+    private void initPricePerRouteDto() {
+        pricePerRouteDto = new PricePerCabinPerRouteDTO();
+        CabinDTO cabin = new CabinDTO("Economica");
+        RouteDTO route = new RouteDTO();
+        AirportDTO arrivalAirport = new AirportDTO();
+        AirportDTO departureAirport = new AirportDTO();
+        CityDTO city = new CityDTO();
+        CityDTO departureCity = new CityDTO();
+        StateDTO state = new StateDTO();
+        StateDTO departureState = new StateDTO();
+        CountryDTO country = new CountryDTO();
+        CountryDTO departureCountry = new CountryDTO();
+        state.setCountry(country);
+        pricePerRouteDto.setActive(true);
+        arrivalAirport.setIataCode("LAN");
+        arrivalAirport.setName("AeroLineas Argentinas");
+        city.setIataCode("CAP");
+        city.setName("Capital");
+        state.setName("Buenos Aires");
+        country.setIsoCode3("ARG");
+        country.setName("Argentina");
+        city.setState(state);
+        arrivalAirport.setCity(city);
+        route.setArrivalAirport(arrivalAirport);
+        departureAirport.setName("Nicaragua Aerolines");
+        departureAirport.setIataCode("NIC");
+        departureCity.setName("Bianca Marina");
+        departureCity.setIataCode("BNM");
+        departureState.setName("Bello paraiso");
+        departureCountry.setName("Nicaragua");
+        departureCountry.setIsoCode3("NIA");
+        departureState.setCountry(departureCountry);
+        departureCity.setState(departureState);
+        departureAirport.setCity(departureCity);
+        route.setDepartureAirport(departureAirport);
+        route.setArrivalAirport(arrivalAirport);
+        pricePerRouteDto.setRoute(route);
+        pricePerRouteDto.setVigencyFrom(DateUtils.DateToString(vigencyFrom));
+        pricePerRouteDto.setVigencyTo(DateUtils.DateToString(vigencyTo));
+        pricePerRouteDto.setPrice(8.30D);
+        pricePerRouteDto.setCabin(cabin);
+        pricePerRouteDto.setActive(true);
+    }
+
+    private void initPricePerRouteReal() {
+        pricePerRouteReal = new PricePerCabinPerRoute();
+        Cabin cabin = new Cabin("Economica");
+        Route route = new Route();
+        Airport arrivalAirport = new Airport();
+        Airport departureAirport = new Airport();
+        City city = new City();
+        City departureCity = new City();
+        State state = new State();
+        State departureState = new State();
+        Country country = new Country();
+        Country departureCountry = new Country();
+        pricePerRouteReal.setActive(true);
+        arrivalAirport.setIataCode("LAN");
+        arrivalAirport.setName("AeroLineas Argentinas");
+        arrivalAirport.setId(1);
+        city.setIataCode("CAP");
+        city.setName("Capital");
+        city.setId(1);
+        state.setName("Buenos Aires");
+        state.setId(1);
+        country.setIsoCode3("ARG");
+        country.setName("Argentina");
+        country.setId(1);
+        state.setCountry(country);
+        city.setState(state);
+        arrivalAirport.setCity(city);
+        departureAirport.setName("Nicaragua Aerolines");
+        departureAirport.setIataCode("NIC");
+        departureAirport.setId(2);
+        departureCity.setName("Bianca Marina");
+        departureCity.setIataCode("BNM");
+        departureCity.setId(2);
+        departureState.setName("Bello paraiso");
+        departureState.setId(2);
+        departureCountry.setName("Nicaragua");
+        departureCountry.setIsoCode3("NIA");
+        departureCountry.setId(2);
+        departureState.setCountry(departureCountry);
+        departureCity.setState(departureState);
+        departureAirport.setCity(departureCity);
+        route.setDepartureAirport(departureAirport);
+        route.setArrivalAirport(arrivalAirport);
+        route.setId(1);
+        pricePerRouteReal.setRoute(route);
+        pricePerRouteReal.setVigencyFrom(vigencyFrom);
+        pricePerRouteReal.setVigencyTo(vigencyTo);
+        pricePerRouteReal.setPrice(8.30D);
+        pricePerRouteReal.setCabin(cabin);
+        pricePerRouteReal.setActive(true);
     }
 
     @Test
-    public void saveDataAlreadyExistsExceptionTest(){
-        boolean catched = false;
-        Airport arrivalAirport = new Airport("AeroLineas Argentinas", "LAN");
-        Airport departureAirport = new Airport("Nicaragua Aerolines", "NIC");
+    public void saveTest() {
         Route route = new Route();
+        Airport arrivalAirport = pricePerRouteReal.getRoute().getArrivalAirport();
+        Airport departureAirport = pricePerRouteReal.getRoute().getDepartureAirport();
+        Cabin cabin = pricePerRouteReal.getCabin();
         route.setArrivalAirport(arrivalAirport);
         route.setDepartureAirport(departureAirport);
-        Cabin cabin = new Cabin("Economica");
+        route.setId(1);
 
-        when(airportRepository.findAirportByIataCode(pricePerRouteRequest.getDepartureAirportIataCode()))
+        List<PricePerCabinPerRoute> pricesRealList = new ArrayList<>();
+        pricesRealList.add(pricePerRouteReal);
+
+        when(airportRepository.findAirportByIataCode(pricePerRouteRequest.getArrivalAirportIataCode()))
                 .thenReturn(arrivalAirport);
         when(airportRepository.findAirportByIataCode(pricePerRouteRequest.getDepartureAirportIataCode()))
                 .thenReturn(departureAirport);
-        when(routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrivalAirport, departureAirport)).thenReturn(route);
-        when(cabinRepository.findCabinByName("Economica"));
-
-
-        try {
-            cabinService.save(new CabinRequest(cabinName));
-            verify(cabinRepository).findCabinByName(cabinName);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof DataAlreadyExistsException);
-            catched = true;
-        }
-        Assert.assertTrue(catched);
-    }
-
-    @Test
-    public void saveEmptyOrNullCabinTest(){
-        boolean catched = false;
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(null);
-        try{
-            cabinService.save(null);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof IllegalArgumentException);
-            catched = true;
-        }
-        Assert.assertTrue(catched);
+        when(routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrivalAirport, departureAirport))
+                .thenReturn(route);
+        when(cabinRepository.findCabinByName(pricePerRouteRequest.getCabinName()))
+                .thenReturn(cabin);
 
         try{
-            cabinService.save(new CabinRequest(null));
+            service.save(pricePerRouteRequest);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        verify(airportRepository).findAirportByIataCode(pricePerRouteRequest.getArrivalAirportIataCode());
+        verify(cabinRepository).findCabinByName("Economica");
+        verify(airportRepository).findAirportByIataCode(pricePerRouteRequest.getDepartureAirportIataCode());
+        verify(repository).save(pricePerRouteReal);
+    }
+
+    @Test
+    public void saveIllegalArgumentExceptionTest() {
+        boolean catched = false;
+        PricePerCabinPerRouteRequest request = null;
+        try {
+            service.save(request);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof IllegalArgumentException);
             catched = true;
         }
         Assert.assertTrue(catched);
 
-        try{
-            cabinService.save(new CabinRequest(""));
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof IllegalArgumentException);
-            catched = true;
-        }
-        Assert.assertTrue(catched);
+        pricePerRouteRequest.setVigencyTo("");
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setVigencyTo(null);
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setVigencyFrom("");
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setVigencyFrom(null);
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setPrice(null);
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setDepartureAirportIataCode("");
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setDepartureAirportIataCode(null);
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setArrivalAirportIataCode("");
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setArrivalAirportIataCode(null);
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setCabinName("");
+        assertIllegalArgumentExceptionOnSave();
+        pricePerRouteRequest.setCabinName(null);
+        assertIllegalArgumentExceptionOnSave();
     }
 
-    @Test
-    public void saveCabinTest(){
-        List<Cabin> cabins = new ArrayList<>();
-
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(null);
-        try {
-            Cabin cabin = new Cabin(cabinName);
-            cabinService.save(new CabinRequest(cabinName));
-            verify(cabinRepository).save(cabin);
-            cabins.add(cabin);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Assert.assertEquals(cabins.get(0).getName(),cabinName);
-    }
-
-    @Test
-    public void listCabinsTest(){
-
-        List<Cabin> cabins = new ArrayList<>();
-        List<CabinDTO> cabinDtos = new ArrayList<>();
-        List<CabinDTO> repository;
-
-        cabins.add(new Cabin("Economica"));
-        cabins.add(new Cabin("King"));
-        cabinDtos.add(new CabinDTO("Economica"));
-        cabinDtos.add(new CabinDTO("King"));
-
-        when(cabinRepository.findAll()).thenReturn(cabins);
-        repository = cabinService.listAll();
-        verify(cabinRepository).findAll();
-
-        Assert.assertEquals(repository.size(), cabins.size());
-        Assert.assertEquals(repository.size(), cabinDtos.size());
-        for(int i = 0; i < repository.size(); i++){
-            Assert.assertEquals(repository.get(i).getName(), cabinDtos.get(i).getName());
-        }
-    }
-
-    @Test
-    public void removeNotFoundExceptionTest(){
+    private void assertIllegalArgumentExceptionOnSave() {
         boolean catched = false;
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(null);
         try {
-            cabinService.delete(new CabinRequest(cabinName));
-            verify(cabinRepository).findCabinByName(cabinName);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof NotFoundException);
-            catched = true;
-        }
-        Assert.assertTrue(catched);
-    }
-
-
-    @Test
-    public void removeIllegalArgumentExceptionTest(){
-        boolean catched = false;
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(null);
-        try {
-            cabinService.delete(new CabinRequest(cabinName));
-            verify(cabinRepository).findCabinByName(cabinName);
+            service.save(pricePerRouteRequest);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof IllegalArgumentException);
             catched = true;
@@ -183,76 +246,42 @@ public class PricePerCabinPerRouteServiceTest {
     }
 
     @Test
-    public void removeTest(){
-        boolean deleted = false;
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(new Cabin(cabinName));
-        try {
-            cabinService.delete(new CabinRequest(cabinName));
-            verify(cabinRepository).findCabinByName(cabinName);
-            verify(cabinRepository).delete(new Cabin(cabinName));
-            deleted = true;
-        } catch (NotFoundException e) {
-            e.printStackTrace();
+    public void listPricesTest() {
+
+        List<PricePerCabinPerRouteDTO> pricesDtosList = new ArrayList<>();
+        pricesDtosList.add(pricePerRouteDto);
+        List<PricePerCabinPerRoute> pricesRealList = new ArrayList<>();
+        pricesRealList.add(pricePerRouteReal);
+        List<PricePerCabinPerRouteDTO> obtainedPrices;
+
+        when(repository.findAll()).thenReturn(pricesRealList);
+        obtainedPrices = service.listAll();
+        verify(repository).findAll();
+
+        Assert.assertNotNull(obtainedPrices);
+        Assert.assertEquals(pricesDtosList.size(), obtainedPrices.size());
+        Assert.assertEquals(pricesDtosList, obtainedPrices);
+
+        for (int i = 0; i < obtainedPrices.size(); i++) {
+            Assert.assertEquals(pricesDtosList.get(i).getCabin(), obtainedPrices.get(i).getCabin());
+            Assert.assertEquals(pricesDtosList.get(i).getPrice(), obtainedPrices.get(i).getPrice());
+            Assert.assertEquals(pricesDtosList.get(i).getRoute(), obtainedPrices.get(i).getRoute());
+            Assert.assertEquals(pricesDtosList.get(i).getVigencyFrom(), obtainedPrices.get(i).getVigencyFrom());
+            Assert.assertEquals(pricesDtosList.get(i).getVigencyTo(), obtainedPrices.get(i).getVigencyTo());
+            Assert.assertEquals(pricesDtosList.get(i).isActive(), obtainedPrices.get(i).isActive());
         }
-        Assert.assertTrue(deleted);
+
     }
 
     @Test
-    public void updateNotFoundExceptionTest(){
-        String previousCabinName = "King";
-        when(cabinRepository.findCabinByName(previousCabinName)).thenReturn(null);
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(null);
-        boolean catched = false;
-        try {
-            cabinService.update(new CabinRequest(cabinName), previousCabinName);
-            verify(cabinRepository).findCabinByName(previousCabinName);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof NotFoundException);
-            catched = true;
-        }
-        Assert.assertTrue(catched);
+    public void getByRouteTest(){
+
     }
 
     @Test
-    public void updateDataAlreadyExistsExceptionTest(){
-        String previousCabinName = "Queen";
-        Cabin previousCabin = new Cabin(previousCabinName);
-        Cabin cabin = new Cabin(cabinName);
-        previousCabin.setId(5);
-        cabin.setId(3);
-        when(cabinRepository.findCabinByName(previousCabinName)).thenReturn(previousCabin);
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(cabin);
-        boolean catched = false;
-        try {
-            cabinService.update(new CabinRequest(cabinName), previousCabinName);
-            verify(cabinRepository).findCabinByName(previousCabinName);
-            verify(cabinRepository).findCabinByName(cabinName);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof DataAlreadyExistsException);
-            catched = true;
-        }
-        Assert.assertNotEquals(cabin.getId(), previousCabin.getId());
-        Assert.assertNotEquals(cabin.getName(), previousCabin.getName());
-        Assert.assertTrue(catched);
+    public void deleteTest(){
+
     }
 
-    @Test
-    public void updateTest(){
-        String previousCabinName = "Queen";
-        Cabin previousCabin = new Cabin(previousCabinName);
-        previousCabin.setId(5);
-        when(cabinRepository.findCabinByName(previousCabinName)).thenReturn(previousCabin);
-        when(cabinRepository.findCabinByName(cabinName)).thenReturn(null);
-        boolean itWorked = false;
-        try {
-            cabinService.update(new CabinRequest(cabinName), previousCabinName);
-            verify(cabinRepository).findCabinByName(previousCabinName);
-            verify(cabinRepository).findCabinByName(cabinName);
-            verify(cabinRepository).update(previousCabinName, previousCabin.getId());
-            itWorked = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Assert.assertTrue(itWorked);
-    }
+
 }

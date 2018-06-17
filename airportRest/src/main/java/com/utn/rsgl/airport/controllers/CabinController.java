@@ -7,6 +7,7 @@ import com.utn.rsgl.airport.service.CabinService;
 import com.utn.rsgl.core.shared.dto.CabinDTO;
 import javassist.NotFoundException;
 import lombok.Data;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.Objects;
 @RequestMapping(value = "/cabin", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CabinController {
     @Autowired
+    @Setter
     private CabinService cabinService;
 
     @RequestMapping(method = RequestMethod.POST)
@@ -73,12 +75,13 @@ public class CabinController {
         return response;
     }
 
-    @RequestMapping(value = "/{previousName}",method = RequestMethod.PUT)
-    public ResponseEntity updateCabin(@RequestBody CabinRequest cabinRequest,
+    @RequestMapping(value = "/{previousName}&&{newName}",method = RequestMethod.PUT)
+    public ResponseEntity updateCabin(@PathVariable("newName") String cabinRequestName,
                                       @PathVariable("previousName") String previousName){
         ResponseEntity myResponseEntity;
         try {
             if(AccessVerifier.hasPermission()){
+                CabinRequest cabinRequest = new CabinRequest(cabinRequestName);
                 cabinService.update(cabinRequest, previousName);
                 myResponseEntity = new ResponseEntity(HttpStatus.OK);
             }else{

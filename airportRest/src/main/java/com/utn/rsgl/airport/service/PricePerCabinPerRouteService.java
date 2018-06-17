@@ -10,6 +10,7 @@ import com.utn.rsgl.airport.requests.PricePerCabinPerRouteRequest;
 import com.utn.rsgl.core.shared.dto.PricePerCabinPerRouteDTO;
 import com.utn.rsgl.core.shared.utils.DateUtils;
 import javassist.NotFoundException;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,19 +23,26 @@ import java.util.Objects;
 public class PricePerCabinPerRouteService {
 
     @Autowired
+    @Setter
     private PricePerCabinPerRouteRepository priceRepository;
     @Autowired
+    @Setter
     private AirportRepository airportRepository;
     @Autowired
+    @Setter
     private RouteRepository routeRepository;
     @Autowired
+    @Setter
     private CabinRepository cabinRepository;
 
-    public void setPricePerCabinPerRouteRepository(PricePerCabinPerRouteRepository repository) {
-        this.priceRepository = repository;
-    }
-
     public void save(PricePerCabinPerRouteRequest request){
+        if(request == null || request.getCabinName() == null || request.getCabinName().equals("")
+                || request.getArrivalAirportIataCode() == null || request.getArrivalAirportIataCode().equals("")
+                || request.getDepartureAirportIataCode() == null || request.getDepartureAirportIataCode().equals("")
+                || request.getPrice() == null || request.getVigencyFrom() == null || request.getVigencyFrom().equals("")
+                || request.getVigencyTo() == null || request.getVigencyTo().equals("")) {
+            throw new IllegalArgumentException("some values of the request are null or empty. Please verify");
+        }
         Airport arrivalAirport = airportRepository.findAirportByIataCode(request.getArrivalAirportIataCode());
         Airport departureAirport = airportRepository.findAirportByIataCode(request.getDepartureAirportIataCode());
 
@@ -53,7 +61,11 @@ public class PricePerCabinPerRouteService {
         List<PricePerCabinPerRouteDTO> pricesDTO = new ArrayList<>();
 
         for(PricePerCabinPerRoute price : prices){
-            pricesDTO.add(DtoFactory.getInstance().getDTOByModel(price, PricePerCabinPerRouteDTO.class));
+            PricePerCabinPerRouteDTO priceDto;
+            priceDto = DtoFactory.getInstance().getDTOByModel(price, PricePerCabinPerRouteDTO.class);
+            priceDto.setVigencyFrom(DateUtils.DateToString(price.getVigencyFrom()));
+            priceDto.setVigencyTo(DateUtils.DateToString(price.getVigencyTo()));
+            pricesDTO.add(priceDto);
         }
 
         return pricesDTO;
@@ -78,9 +90,42 @@ public class PricePerCabinPerRouteService {
         Airport arrivalAirport = airportRepository.findAirportByIataCode(arrivalAirportIatacode);
         Airport departureAirport = airportRepository.findAirportByIataCode(departureAirportIataCode);
         Route route = routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrivalAirport, departureAirport);
+
         List<PricePerCabinPerRouteDTO> pricesDto = new ArrayList<>();
         List<PricePerCabinPerRoute> prices = priceRepository.findPricePerCabinPerRouteByRoute(route);
 
+        for(PricePerCabinPerRoute price : prices){
+            pricesDto.add(DtoFactory.getInstance().getDTOByModel(price, PricePerCabinPerRouteDTO.class));
+        }
+        return pricesDto;
+    }
+
+    public List<PricePerCabinPerRouteDTO> getByRouteAndDates(String arrivalIataCode, String departureIataCode,
+                                                             String from, String to) {
+        Airport arrivalAirport = airportRepository.findAirportByIataCode(arrivalIataCode);
+        Airport departureAirport = airportRepository.findAirportByIataCode(departureIataCode);
+        Date fromDate = DateUtils.StringToDate(from);
+        Date toDate = DateUtils.StringToDate(to);
+        Route route = routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrivalAirport, departureAirport);
+
+        List<PricePerCabinPerRouteDTO> pricesDto = new ArrayList<>();
+        List<PricePerCabinPerRoute> prices = priceRepository.findPricePerCabinPerRouteByRouteAndVigencyFromAndVigencyTo(
+                                                                route, fromDate, toDate);
+
+        for(PricePerCabinPerRoute price : prices){
+            pricesDto.add(DtoFactory.getInstance().getDTOByModel(price, PricePerCabinPerRouteDTO.class));
+        }
+        return pricesDto;
+    }
+
+
+    public List<PricePerCabinPerRouteDTO> getByDates(String from, String to) {
+        Date fromDate = DateUtils.StringToDate(from);
+        Date toDate = DateUtils.StringToDate(to);
+
+        List<PricePerCabinPerRouteDTO> pricesDto = new ArrayList<>();
+        List<PricePerCabinPerRoute> prices = priceRepository.findPricePerCabinPerRouteByVigencyFromAndVigencyTo(
+                                                                fromDate, toDate);
         for(PricePerCabinPerRoute price : prices){
             pricesDto.add(DtoFactory.getInstance().getDTOByModel(price, PricePerCabinPerRouteDTO.class));
         }
@@ -99,5 +144,4 @@ public class PricePerCabinPerRouteService {
         priceRepository.delete(price);
 
     }
-
 }

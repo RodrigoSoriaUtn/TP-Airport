@@ -190,4 +190,102 @@ public class CabinControllerTest {
         Assert.assertEquals(obtainedCabin.get(0).getName(), cabinDto.getName());
     }
 
+    @Test
+    public void uploadNotFoundExceptionTest(){
+        CabinRequest cabinRequest = new CabinRequest("freemium");
+        ResponseEntity response = null;
+        try {
+            doThrow(new NotFoundException("error")).when(cabinService).update(cabinRequest, "premium");
+            response = cabinController.updateCabin("freemium", "premium");
+            verify(cabinService).update(cabinRequest, "premium");
+        } catch (Exception e){}
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void uploadDataAlreadyExistsExceptionTest(){
+        CabinRequest cabinRequest = new CabinRequest("freemium");
+        ResponseEntity response = null;
+        try {
+            doThrow(new DataAlreadyExistsException("error")).when(cabinService).update(cabinRequest, "premium");
+            response = cabinController.updateCabin("freemium", "premium");
+            verify(cabinService).update(cabinRequest, "premium");
+        } catch (Exception e){}
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.IM_USED);
+    }
+
+
+    @Test
+    public void uploadExceptionTest(){
+        CabinRequest cabinRequest = new CabinRequest("freemium");
+        ResponseEntity response = null;
+        try {
+            doThrow(new Exception("error")).when(cabinService).update(cabinRequest, "premium");
+            response = cabinController.updateCabin("freemium", "premium");
+            verify(cabinService).update(cabinRequest, "premium");
+        } catch (Exception e){}
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void uploadTest(){
+        CabinRequest cabinRequest = new CabinRequest("freemium");
+        ResponseEntity response = null;
+        try {
+            doNothing().when(cabinService).update(cabinRequest, "premium");
+            response = cabinController.updateCabin("freemium", "premium");
+            verify(cabinService).update(cabinRequest, "premium");
+        } catch (Exception e){}
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    public void removeNotFoundTest(){
+        CabinRequest cabinRequest = new CabinRequest("Freemium");
+        ResponseEntity response = null;
+        try {
+            doThrow(new NotFoundException("error")).when(cabinService).delete(cabinRequest);
+            response = cabinController.deleteCabin(cabinRequest);
+            verify(cabinService).delete(cabinRequest);
+        } catch (Exception e) {}
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void removeExceptionTest(){
+        CabinRequest cabinRequest = new CabinRequest("Freemium");
+        ResponseEntity response = null;
+        try {
+            doThrow(new Exception("error")).when(cabinService).delete(cabinRequest);
+            response = cabinController.deleteCabin(cabinRequest);
+            verify(cabinService).delete(cabinRequest);
+        } catch (Exception e) {}
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void removeTest(){
+        CabinRequest cabinRequest = new CabinRequest("Freemium");
+        ResponseEntity response = null;
+        try {
+            doNothing().when(cabinService).delete(cabinRequest);
+            response = cabinController.deleteCabin(cabinRequest);
+            verify(cabinService).delete(cabinRequest);
+        } catch (Exception e) {}
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
 }

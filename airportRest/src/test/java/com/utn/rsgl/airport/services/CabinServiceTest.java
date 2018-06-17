@@ -156,9 +156,7 @@ public class CabinServiceTest {
             verify(cabinRepository).findCabinByName(cabinName);
             verify(cabinRepository).delete(new Cabin(cabinName));
             deleted = true;
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e){}
         Assert.assertTrue(deleted);
     }
 

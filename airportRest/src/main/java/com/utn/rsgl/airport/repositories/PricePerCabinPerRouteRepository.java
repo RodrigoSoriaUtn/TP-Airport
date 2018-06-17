@@ -24,4 +24,11 @@ public interface PricePerCabinPerRouteRepository extends JpaRepository<PricePerC
                        @Param("vigencyTo") Date vigencyTo, @Param("id") Long id);
 
     public List<PricePerCabinPerRoute> findPricePerCabinPerRouteByRoute(Route route);
+
+    public List<PricePerCabinPerRoute> findPricePerCabinPerRouteByRouteAndVigencyFromAndVigencyTo(Route route,
+                                                                                                  Date vigencyFrom,
+                                                                                                  Date vigencyTo);
+    public List<PricePerCabinPerRoute> findPricePerCabinPerRouteByVigencyFromAndVigencyTo(Date vigencyfrom,
+                                                                                          Date vigencyTo);
+
 }

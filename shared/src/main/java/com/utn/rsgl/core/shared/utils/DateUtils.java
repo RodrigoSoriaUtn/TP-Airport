@@ -1,5 +1,4 @@
 package com.utn.rsgl.core.shared.utils;
-import lombok.Data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -6,6 +6,7 @@ import com.utn.rsgl.airport.requests.AirportRequest;
 import com.utn.rsgl.airport.service.AirportService;
 import com.utn.rsgl.core.shared.dto.AirportDTO;
 import javassist.NotFoundException;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.Objects;
 public class AirportController{
 
     @Autowired
+    @Setter
     AirportService airportService;
 
     @RequestMapping(method = RequestMethod.POST)
@@ -31,6 +33,7 @@ public class AirportController{
         try {
             if(AccessVerifier.isLogued() && AccessVerifier.hasPermission()){
                 airportService.save(airport);
+                status = new ResponseEntity(HttpStatus.CREATED);
             }else {
                 status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
@@ -44,19 +47,15 @@ public class AirportController{
             e.printStackTrace();
             status = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if(status == null) status = new ResponseEntity(HttpStatus.CREATED);
         return status;
     }
 
-    @RequestMapping(value = "/{previousIataCode}", method = RequestMethod.PUT)
-    public ResponseEntity update(@RequestBody AirportRequest airportRequest,
-                                 @PathVariable("previousIataCode") String iataCode){
-        ResponseEntity status = null;
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity update(@RequestBody AirportRequest airportRequest){
+        ResponseEntity status;
         try{
-           airportService.update(airportRequest, iataCode);
-        } catch (DataAlreadyExistsException e) {
-            e.printStackTrace();
-            status = new ResponseEntity(HttpStatus.IM_USED);
+           airportService.update(airportRequest);
+           status = new ResponseEntity(HttpStatus.OK);
         } catch (NotFoundException e) {
             e.printStackTrace();
             status = new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -64,7 +63,6 @@ public class AirportController{
             e.printStackTrace();
             status = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if(status == null) status = new ResponseEntity(HttpStatus.OK);
         return status;
     }
 
