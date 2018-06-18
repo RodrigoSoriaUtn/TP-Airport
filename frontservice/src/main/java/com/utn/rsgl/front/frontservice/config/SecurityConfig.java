@@ -2,10 +2,7 @@ package com.utn.rsgl.front.frontservice.config;
 
 import com.utn.rsgl.front.frontservice.config.JWTConfig.JwtFilter;
 import com.utn.rsgl.front.frontservice.config.JWTConfig.LoginFilter;
-import com.utn.rsgl.front.frontservice.request.CompleteUserRequest;
-import com.utn.rsgl.front.frontservice.request.UserRequest;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -29,13 +26,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						UsernamePasswordAuthenticationFilter.class);
 	}
 
-	@Override
+	/*@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// Creamos una cuenta de usuario por default
+
 		auth.inMemoryAuthentication()
 				.withUser(myUser.getUsername())
 				.password(myUser.getPassword())
 				.roles(myUser.getRole());
 
-	}
+	}*/
 }

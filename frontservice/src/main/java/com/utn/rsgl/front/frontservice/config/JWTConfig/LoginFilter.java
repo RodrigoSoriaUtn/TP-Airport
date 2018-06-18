@@ -1,7 +1,7 @@
 package com.utn.rsgl.front.frontservice.config.JWTConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.utn.rsgl.front.frontservice.request.UserRequest;
+import com.utn.rsgl.front.frontservice.request.UserResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +29,7 @@ public class LoginFilter  extends AbstractAuthenticationProcessingFilter {
 			throws AuthenticationException, IOException {
 
 		InputStream body = req.getInputStream();
-		UserRequest user = new ObjectMapper().readValue(body, UserRequest.class);
+		UserResponse user = new ObjectMapper().readValue(body, UserResponse.class);
 		return getAuthenticationManager().authenticate(
 				new UsernamePasswordAuthenticationToken(
 						user.getUsername(),
@@ -48,4 +48,3 @@ public class LoginFilter  extends AbstractAuthenticationProcessingFilter {
 			}
 }
 
-}
