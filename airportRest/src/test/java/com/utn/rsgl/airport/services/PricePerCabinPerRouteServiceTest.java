@@ -384,7 +384,7 @@ public class PricePerCabinPerRouteServiceTest {
         verify(routeRepository).findRouteByArrivalAirportAndDepartureAirport(arrival,departure);
         verify(cabinRepository).findCabinByName(cabin.getName());
         verify(repository).delete(pricePerRouteReal);
-        
+
     }
 
 }

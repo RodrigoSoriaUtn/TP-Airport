@@ -35,7 +35,7 @@ public class PricePerCabinPerRouteService {
     @Setter
     private CabinRepository cabinRepository;
 
-    public void save(PricePerCabinPerRouteRequest request){
+    public void save(PricePerCabinPerRouteRequest request) throws IllegalArgumentException, Exception{
         if(request == null || request.getCabinName() == null || request.getCabinName().equals("")
                 || request.getArrivalAirportIataCode() == null || request.getArrivalAirportIataCode().equals("")
                 || request.getDepartureAirportIataCode() == null || request.getDepartureAirportIataCode().equals("")
@@ -71,7 +71,7 @@ public class PricePerCabinPerRouteService {
         return pricesDTO;
     }
 
-    public void update(PricePerCabinPerRouteRequest request, Long id) throws NotFoundException {
+    public void update(PricePerCabinPerRouteRequest request, Long id) throws NotFoundException, Exception {
         PricePerCabinPerRoute originalRoute = priceRepository.findById(id).get();
         Airport arrival = airportRepository.findAirportByIataCode(request.getArrivalAirportIataCode());
         Airport departure = airportRepository.findAirportByIataCode(request.getDepartureAirportIataCode());
