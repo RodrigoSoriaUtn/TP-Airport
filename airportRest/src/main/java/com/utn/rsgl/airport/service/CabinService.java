@@ -22,7 +22,7 @@ public class CabinService {
     private  CabinRepository cabinRepository;
 
     public void save(CabinRequest cabin) throws DataAlreadyExistsException, IllegalArgumentException, Exception {
-        if(cabin != null || cabin.getName() != null || cabin.getName().equals("")){
+        if(cabin == null || cabin.getName() == null || cabin.getName().equals("")){
             throw new IllegalArgumentException("The cabin is null or the name is empty");
         }
         if(cabinRepository.findCabinByName(cabin.getName()) != null){

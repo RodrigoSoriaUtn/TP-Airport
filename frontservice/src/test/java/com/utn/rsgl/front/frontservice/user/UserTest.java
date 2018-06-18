@@ -1,6 +1,7 @@
 package com.utn.rsgl.front.frontservice.user;
 
-import com.bootcampglobant.userregister.models.User;
+
+import com.utn.rsgl.front.frontservice.models.User;
 import org.junit.Assert;
 import org.junit.Test;
 

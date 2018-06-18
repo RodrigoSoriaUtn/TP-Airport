@@ -1,4 +1,4 @@
-package com.bootcamp2018.shoppingapi.config;
+package com.utn.rsgl.front.frontservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

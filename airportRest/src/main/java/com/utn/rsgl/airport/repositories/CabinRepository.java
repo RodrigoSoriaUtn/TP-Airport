@@ -17,5 +17,5 @@ public interface CabinRepository extends JpaRepository<Cabin, Long> {
     @Transactional
     @Modifying
     @Query("update Cabin set name = :name  where id = :idcabin")
-    void update(@Param("name") String name, @Param("idcabin") long id);
+    void update(@Param("name") String name, @Param("idcabin") Long id);
 }

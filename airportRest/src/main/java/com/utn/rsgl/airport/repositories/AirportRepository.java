@@ -19,7 +19,7 @@ public interface AirportRepository extends JpaRepository<Airport, Long> {
     @Modifying
     @Query("update Airport" +
             " set name = :name, iataCode = :iataCode, city = :city " +
-            " where id = :idCabin ")
-    public Airport update(@Param("idCabin") Long id, @Param("name") String name, @Param("iataCode") String iataCode,
+            " where id = :idAirport ")
+    public Airport update(@Param("idAirport") Long id, @Param("name") String name, @Param("iataCode") String iataCode,
                           @Param("city") City city);
 }

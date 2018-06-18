@@ -1,8 +1,9 @@
 package com.utn.rsgl.front.frontservice.controller;
 
-import com.bootcampglobant.userregister.models.User;
+import com.utn.rsgl.front.frontservice.models.User;
 import com.utn.rsgl.front.frontservice.request.UserResponse;
 import com.utn.rsgl.front.frontservice.service.UserService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Objects;
 import java.util.Optional;
 
+@Data
 @Controller
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
@@ -24,8 +26,8 @@ public class UserController {
 	@Autowired UserService userService;
 	@Autowired HttpSession session;
 
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<User> Loggin(HttpServletRequest request,@RequestBody UserResponse userResponse) throws Exception {
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<User> Loggin(HttpServletRequest request, @RequestBody UserResponse userResponse) throws Exception {
 		session = request.getSession();
 		User user = userService.findAnUser(userResponse.getUsername());
 		HttpHeaders headers = new HttpHeaders();

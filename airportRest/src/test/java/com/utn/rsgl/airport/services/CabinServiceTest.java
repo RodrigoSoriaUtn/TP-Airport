@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 
 public class CabinServiceTest {
 
-
     @Mock
     private CabinRepository cabinRepository;
 
@@ -136,9 +135,19 @@ public class CabinServiceTest {
     @Test
     public void removeIllegalArgumentExceptionTest(){
         boolean catched = false;
+        CabinRequest cabinRequest = new CabinRequest("");
+        verifyIllegarArgumentExceptionOnRemove(cabinRequest);
+        cabinRequest.setName(null);
+        verifyIllegarArgumentExceptionOnRemove(cabinRequest);
+        cabinRequest = null;
+        verifyIllegarArgumentExceptionOnRemove(cabinRequest);
+    }
+
+    private void verifyIllegarArgumentExceptionOnRemove(CabinRequest cabinRequest){
+        boolean catched = false;
         when(cabinRepository.findCabinByName(cabinName)).thenReturn(null);
         try {
-            cabinService.delete(new CabinRequest(cabinName));
+            cabinService.delete(cabinRequest);
             verify(cabinRepository).findCabinByName(cabinName);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof IllegalArgumentException);
@@ -211,7 +220,7 @@ public class CabinServiceTest {
             cabinService.update(new CabinRequest(cabinName), previousCabinName);
             verify(cabinRepository).findCabinByName(previousCabinName);
             verify(cabinRepository).findCabinByName(cabinName);
-            verify(cabinRepository).update(previousCabinName, previousCabin.getId());
+            verify(cabinRepository).update(cabinName, previousCabin.getId());
             itWorked = true;
         } catch (Exception e) {
             e.printStackTrace();

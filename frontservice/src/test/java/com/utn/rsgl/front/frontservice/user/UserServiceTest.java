@@ -1,8 +1,9 @@
 package com.utn.rsgl.front.frontservice.user;
 
-import com.bootcampglobant.userregister.controller.UserService;
-import com.bootcampglobant.userregister.models.User;
-import com.bootcampglobant.userregister.repository.UserRepository;
+
+import com.utn.rsgl.front.frontservice.models.User;
+import com.utn.rsgl.front.frontservice.repository.UserRepository;
+import com.utn.rsgl.front.frontservice.service.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
-	@Mock UserRepository userRepository;
+	@Mock
+	UserRepository userRepository;
 	UserService userService;
 	
 	@Before

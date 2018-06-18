@@ -18,8 +18,8 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
     @Transactional
     @Modifying
     @Query("update Route " +
-            "set arrivalAirport = :arrival, departureAirport = :=departure" +
+            "set arrivalAirport = :arrival, departureAirport = :departure " +
             " where id = :oldId")
-    void update(@Param("oldId") long oldId, @Param("arrival") Airport arrivalAirport, @Param("departure") Airport departureAirport);
+    public void update(@Param("oldId") Long oldId, @Param("arrival") Airport arrivalAirport, @Param("departure") Airport departureAirport);
 
 }

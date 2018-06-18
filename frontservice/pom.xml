@@ -42,6 +42,11 @@
             <artifactId>spring-session-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.utn.rsgl.core</groupId>
+            <artifactId>shared</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.7.0</version>
@@ -82,11 +87,18 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.bootcamp-globant</groupId>
-            <artifactId>user-register</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/UserRegisterAPI.jar</systemPath>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>2.0.7.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
     </dependencies>

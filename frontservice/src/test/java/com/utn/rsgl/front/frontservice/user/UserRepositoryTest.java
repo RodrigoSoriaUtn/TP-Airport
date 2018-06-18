@@ -1,7 +1,7 @@
 package com.utn.rsgl.front.frontservice.user;
 
-import com.bootcampglobant.userregister.models.User;
-import com.bootcampglobant.userregister.repository.UserRepository;
+import com.utn.rsgl.front.frontservice.models.User;
+import com.utn.rsgl.front.frontservice.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class UserRepositoryTest {
-	@Mock UserRepository userRepository;
+	@Mock
+	UserRepository userRepository;
 
 	@Before
 	public void creatingRequiredThings(){

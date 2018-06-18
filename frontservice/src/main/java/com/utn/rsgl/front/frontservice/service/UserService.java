@@ -1,10 +1,9 @@
 package com.utn.rsgl.front.frontservice.service;
 
-import com.bootcampglobant.userregister.models.User;
-import com.bootcampglobant.userregister.repository.UserRepository;
+import com.utn.rsgl.front.frontservice.models.User;
+import com.utn.rsgl.front.frontservice.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,8 @@ public class UserService {
 	/** The persistence
 	 *
 	 */
-	@Autowired UserRepository userRepository;
+	@Autowired
+	UserRepository userRepository;
 
 	/** to add a new User
 	 *
@@ -51,6 +51,7 @@ public class UserService {
 	 * @return an object User
 	 */
 	public User findAnUserByName(String name){
+
 		return userRepository.findByName(name).get(0);
 	}
 
