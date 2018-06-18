@@ -5,6 +5,7 @@ import com.utn.rsgl.airport.requests.PricePerCabinPerRouteRequest;
 import com.utn.rsgl.airport.service.PricePerCabinPerRouteService;
 import com.utn.rsgl.core.shared.dto.PricePerCabinPerRouteDTO;
 import javassist.NotFoundException;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -22,16 +23,23 @@ import java.util.Objects;
 public class PricePerCabinPerRouteController {
 
     @Autowired
+    @Setter
     private PricePerCabinPerRouteService priceService;
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody ResponseEntity save(@RequestBody PricePerCabinPerRouteRequest request){
         ResponseEntity status;
-        if(AccessVerifier.hasPermission()){
-            priceService.save(request);
-            status = new ResponseEntity(HttpStatus.ACCEPTED);
-        }else{
-            status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        try {
+            if (AccessVerifier.hasPermission()) {
+                priceService.save(request);
+                status = new ResponseEntity(HttpStatus.CREATED);
+            } else {
+                status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (IllegalArgumentException e){
+            status = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            status = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }
@@ -42,8 +50,8 @@ public class PricePerCabinPerRouteController {
         try{
             if(!Objects.isNull(httpRequest.getParameter("routeId"))){
                 if(AccessVerifier.hasPermission()){
-                    priceService.update(request, Long.getLong(httpRequest.getParameter("routeId")));
-                    status = new ResponseEntity(HttpStatus.ACCEPTED);
+                    priceService.update(request, Long.parseLong(httpRequest.getParameter("routeId")));
+                    status = new ResponseEntity(HttpStatus.OK);
                 }else{
                     status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
                 }
@@ -51,10 +59,8 @@ public class PricePerCabinPerRouteController {
                 status = new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
         }catch (NotFoundException e){
-            e.printStackTrace();
             status = new ResponseEntity(HttpStatus.NOT_FOUND);
         } catch(Exception e){
-            e.printStackTrace();
             status = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -72,7 +78,6 @@ public class PricePerCabinPerRouteController {
                 status = new ResponseEntity(HttpStatus.UNAUTHORIZED);
             }
         } catch(Exception e){
-            e.printStackTrace();
             status = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
@@ -103,7 +108,6 @@ public class PricePerCabinPerRouteController {
             }
             response = ResponseEntity.accepted().headers(headers).body(pricesDtos);
         } catch (Exception e){
-            e.printStackTrace();
             response = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
