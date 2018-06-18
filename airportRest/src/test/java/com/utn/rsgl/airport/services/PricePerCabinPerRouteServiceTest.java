@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -275,13 +276,115 @@ public class PricePerCabinPerRouteServiceTest {
 
     @Test
     public void getByRouteTest(){
+        Route route = pricePerRouteReal.getRoute();
+        Airport arrival = route.getArrivalAirport();
+        Airport departure = route.getDepartureAirport();
 
+        List<PricePerCabinPerRoute> pricesReal = new ArrayList<>();
+        pricesReal.add(pricePerRouteReal);
+        List<PricePerCabinPerRouteDTO> pricesDto = new ArrayList<>();
+        pricesDto.add(pricePerRouteDto);
+
+        when(airportRepository.findAirportByIataCode(arrival.getIataCode())).thenReturn(arrival);
+        when(airportRepository.findAirportByIataCode(departure.getIataCode())).thenReturn(departure);
+        when(routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrival, departure)).thenReturn(route);
+        when(repository.findPricePerCabinPerRouteByRoute(route)).thenReturn(pricesReal);
+
+        List<PricePerCabinPerRouteDTO> obtainedPricesDto = service.getByRoute(arrival.getIataCode(), departure.getIataCode());
+
+        verify(airportRepository).findAirportByIataCode(arrival.getIataCode());
+        verify(airportRepository).findAirportByIataCode(departure.getIataCode());
+        verify(routeRepository).findRouteByArrivalAirportAndDepartureAirport(arrival,departure);
+        verify(repository).findPricePerCabinPerRouteByRoute(route);
+
+        Assert.assertNotNull(obtainedPricesDto);
+        Assert.assertEquals(pricesDto.size(), obtainedPricesDto.size());
+        Assert.assertArrayEquals(pricesDto.toArray(), obtainedPricesDto.toArray());
+    }
+
+    @Test
+    public void getByRouteAndDates(){
+        Route route = pricePerRouteReal.getRoute();
+        Airport arrival = route.getArrivalAirport();
+        Airport departure = route.getDepartureAirport();
+
+        List<PricePerCabinPerRoute> pricesReal = new ArrayList<>();
+        pricesReal.add(pricePerRouteReal);
+        List<PricePerCabinPerRouteDTO> pricesDto = new ArrayList<>();
+        pricesDto.add(pricePerRouteDto);
+
+        String from = pricePerRouteDto.getVigencyFrom();
+        String to = pricePerRouteDto.getVigencyTo();
+
+        when(airportRepository.findAirportByIataCode(arrival.getIataCode())).thenReturn(arrival);
+        when(airportRepository.findAirportByIataCode(departure.getIataCode())).thenReturn(departure);
+        when(routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrival, departure)).thenReturn(route);
+
+        when(repository.findPricePerCabinPerRouteByRouteAndVigencyFromAndVigencyTo(route, DateUtils.StringToDate(from),
+                DateUtils.StringToDate(to))).thenReturn(pricesReal);
+
+        List<PricePerCabinPerRouteDTO> obtainedPricesDto = service.getByRouteAndDates(arrival.getIataCode(),
+                departure.getIataCode(), from, to);
+
+        verify(airportRepository).findAirportByIataCode(arrival.getIataCode());
+        verify(airportRepository).findAirportByIataCode(departure.getIataCode());
+        verify(routeRepository).findRouteByArrivalAirportAndDepartureAirport(arrival,departure);
+        verify(repository).findPricePerCabinPerRouteByRouteAndVigencyFromAndVigencyTo(route, DateUtils.StringToDate(from),
+                DateUtils.StringToDate(to));
+
+        Assert.assertNotNull(obtainedPricesDto);
+        Assert.assertEquals(pricesDto.size(), obtainedPricesDto.size());
+        Assert.assertArrayEquals(pricesDto.toArray(), obtainedPricesDto.toArray());
+    }
+
+    @Test
+    public void getByDates(){
+
+        List<PricePerCabinPerRoute> pricesReal = new ArrayList<>();
+        pricesReal.add(pricePerRouteReal);
+        List<PricePerCabinPerRouteDTO> pricesDto = new ArrayList<>();
+        pricesDto.add(pricePerRouteDto);
+
+        String from = pricePerRouteDto.getVigencyFrom();
+        String to = pricePerRouteDto.getVigencyTo();
+
+        when(repository.findPricePerCabinPerRouteByVigencyFromAndVigencyTo(DateUtils.StringToDate(from),
+                DateUtils.StringToDate(to))).thenReturn(pricesReal);
+
+        List<PricePerCabinPerRouteDTO> obtainedPricesDto = service.getByDates(from, to);
+
+        verify(repository).findPricePerCabinPerRouteByVigencyFromAndVigencyTo(DateUtils.StringToDate(from),
+                DateUtils.StringToDate(to));
+
+        Assert.assertNotNull(obtainedPricesDto);
+        Assert.assertEquals(pricesDto.size(), obtainedPricesDto.size());
+        Assert.assertArrayEquals(pricesDto.toArray(), obtainedPricesDto.toArray());
     }
 
     @Test
     public void deleteTest(){
+        Route route = pricePerRouteReal.getRoute();
+        Airport arrival = route.getArrivalAirport();
+        Airport departure = route.getDepartureAirport();
 
+        String from = pricePerRouteDto.getVigencyFrom();
+        String to = pricePerRouteDto.getVigencyTo();
+        Cabin cabin = pricePerRouteReal.getCabin();
+
+        when(airportRepository.findAirportByIataCode(arrival.getIataCode())).thenReturn(arrival);
+        when(airportRepository.findAirportByIataCode(departure.getIataCode())).thenReturn(departure);
+        when(routeRepository.findRouteByArrivalAirportAndDepartureAirport(arrival, departure)).thenReturn(route);
+        when(cabinRepository.findCabinByName(cabin.getName())).thenReturn(cabin);
+        doNothing().when(repository).delete(pricePerRouteReal);
+
+        service.delete(pricePerRouteRequest);
+
+        verify(airportRepository).findAirportByIataCode(arrival.getIataCode());
+        verify(airportRepository).findAirportByIataCode(departure.getIataCode());
+        verify(routeRepository).findRouteByArrivalAirportAndDepartureAirport(arrival,departure);
+        verify(cabinRepository).findCabinByName(cabin.getName());
+        verify(repository).delete(pricePerRouteReal);
+        
     }
-
 
 }
